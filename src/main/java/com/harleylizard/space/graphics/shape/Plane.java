@@ -12,8 +12,4 @@ public final class Plane implements Shape {
         this.toX = toX;
         this.toY = toY;
     }
-
-    @Override
-    public void build(Builder builder) {
-    }
 }

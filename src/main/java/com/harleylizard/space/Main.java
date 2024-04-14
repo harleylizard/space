@@ -3,6 +3,8 @@ package com.harleylizard.space;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
+import com.harleylizard.space.graphics.UniformBuffer;
+import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -27,10 +29,26 @@ public final class Main {
                     .useProgram(Shader.VERTEX, "shaders/quad_vertex.glsl")
                     .build();
 
+            var projection = new Matrix4f();
+            var view = new Matrix4f();
+            var model = new Matrix4f();
+
             glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
 
             while (!window.shouldClose()) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                var aspectRatio = window.getAspectRatio();
+                var fovy = (float) Math.toRadians(70.0F);
+
+                projection.identity();
+                projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
+
+                view.identity();
+                model.identity();
+                model.translate(0.0F, 0.0F, -10.0F);
+
+                UniformBuffer.uploadMatrices(projection, view, model);
 
                 program.bind();
                 quad.draw();

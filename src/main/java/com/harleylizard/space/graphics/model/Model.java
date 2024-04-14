@@ -1,17 +1,22 @@
 package com.harleylizard.space.graphics.model;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.harleylizard.space.graphics.shape.Cube;
 import com.harleylizard.space.graphics.shape.Plane;
 import com.harleylizard.space.graphics.shape.Shape;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public final class Model implements Iterable<Shape> {
+    public static final JsonDeserializer<Model> DESERIALIZER = Model::fromJson;
+
     private static final Model EMPTY = new Model(List.of());
 
     private final List<Shape> shapes;
@@ -29,7 +34,7 @@ public final class Model implements Iterable<Shape> {
         return shapes.iterator();
     }
 
-    public static Model fromJson(JsonElement jsonElement) {
+    private static Model fromJson(JsonElement jsonElement, Type type, JsonDeserializationContext context) {
         var jsonObject = jsonElement.getAsJsonObject();
 
         var jsonArray = jsonObject.getAsJsonArray("shapes");

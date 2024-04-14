@@ -16,13 +16,4 @@ public final class Cube implements Shape {
         this.toY = toY;
         this.toZ = toZ;
     }
-
-    @Override
-    public void build(Builder builder) {
-
-        builder.vertex(0.0F, 0.0F, 0.0F);
-        builder.vertex(0.0F, 0.0F, 0.0F);
-        builder.vertex(0.0F, 0.0F, 0.0F);
-        builder.vertex(0.0F, 0.0F, 0.0F);
-    }
 }

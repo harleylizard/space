@@ -11,6 +11,9 @@ import static org.lwjgl.system.MemoryUtil.memAddress;
 public final class Window {
     private final long window;
 
+    private int width;
+    private int height;
+
     {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -22,6 +25,10 @@ public final class Window {
             throw new RuntimeException("Failed to create GLFW Window");
         }
         centre();
+        glfwSetWindowSizeCallback(window, (window, width, height) -> {
+            this.width = width;
+            this.height = height;
+        });
 
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
@@ -35,8 +42,8 @@ public final class Window {
             nglfwGetMonitorWorkarea(monitor, memAddress(buffer), memAddress(buffer) + 4, memAddress(buffer) + 8, memAddress(buffer) + 12);
             nglfwGetWindowSize(window, memAddress(buffer) + 16, memAddress(buffer) + 20);
 
-            var width = buffer.get(4);
-            var height = buffer.get(5);
+            width = buffer.get(4);
+            height = buffer.get(5);
 
             glfwSetWindowPos(window, (buffer.get(2) - width) / 2, (buffer.get(3) - height) / 2);
         }
@@ -54,5 +61,9 @@ public final class Window {
     public void destroy() {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
+    }
+
+    public float getAspectRatio() {
+        return (float) width / height;
     }
 }
