@@ -20,8 +20,12 @@ public final class Main {
         try {
             var quad = new Quad();
 
+            glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
+
             while (!window.shouldClose()) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                quad.draw();
 
                 window.refresh();
             }
