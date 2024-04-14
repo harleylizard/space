@@ -5,6 +5,7 @@ import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memAddress;
 
@@ -28,6 +29,9 @@ public final class Window {
         glfwSetWindowSizeCallback(window, (window, width, height) -> {
             this.width = width;
             this.height = height;
+        });
+        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+            glViewport(0, 0, width, height);
         });
 
         glfwMakeContextCurrent(window);

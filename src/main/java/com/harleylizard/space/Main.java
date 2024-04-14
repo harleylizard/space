@@ -4,6 +4,7 @@ import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
+import com.harleylizard.space.graphics.model.ModelDisplay;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -33,7 +34,15 @@ public final class Main {
             var view = new Matrix4f();
             var model = new Matrix4f();
 
+            var modelDisplay = new ModelDisplay();
+            var cubeModel = modelDisplay.read("models/cube.json");
+            var singular = modelDisplay.singular(cubeModel);
+
             glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
+
+            var angle = 0.0F;
+
+            glEnable(GL_CULL_FACE);
 
             while (!window.shouldClose()) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -45,13 +54,15 @@ public final class Main {
                 projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
 
                 view.identity();
+                view.translate(0.0F, 0.0F, -10.0F);
+
                 model.identity();
-                model.translate(0.0F, 0.0F, -10.0F);
+                model.rotate((float) Math.toRadians(angle++), 0.0F, 1.0F, 0.0F);
 
                 UniformBuffer.uploadMatrices(projection, view, model);
 
                 program.bind();
-                quad.draw();
+                singular.draw();
                 Quad.unbind();
 
                 ProgramPipeline.unbind();

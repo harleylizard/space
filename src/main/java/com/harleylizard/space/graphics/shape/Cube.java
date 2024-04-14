@@ -1,5 +1,7 @@
 package com.harleylizard.space.graphics.shape;
 
+import com.harleylizard.space.graphics.vertex.VertexParameters;
+
 public final class Cube implements Shape {
     private final float fromX;
     private final float fromY;
@@ -15,5 +17,38 @@ public final class Cube implements Shape {
         this.toX = toX;
         this.toY = toY;
         this.toZ = toZ;
+    }
+
+    @Override
+    public void build(VertexParameters parameters) {
+        parameters.vertex(toX, fromY, fromZ);
+        parameters.vertex(fromX, fromY, fromZ);
+        parameters.vertex(fromX, toY, fromZ);
+        parameters.vertex(toX, toY, fromZ);
+
+        parameters.vertex(toX, fromY, toZ);
+        parameters.vertex(toX, fromY, fromZ);
+        parameters.vertex(toX, toY, fromZ);
+        parameters.vertex(toX, toY, toZ);
+
+        parameters.vertex(fromX, fromY, toZ);
+        parameters.vertex(toX, fromY, toZ);
+        parameters.vertex(toX, toY, toZ);
+        parameters.vertex(fromX, toY, toZ);
+
+        parameters.vertex(fromX, fromY, fromZ);
+        parameters.vertex(fromX, fromY, toZ);
+        parameters.vertex(fromX, toY, toZ);
+        parameters.vertex(fromX, toY, fromZ);
+
+        parameters.vertex(toX, toY, fromZ);
+        parameters.vertex(fromX, toY, fromZ);
+        parameters.vertex(fromX, toY, toZ);
+        parameters.vertex(toX, toY, toZ);
+
+        parameters.vertex(fromX, fromY, fromZ);
+        parameters.vertex(toX, fromY, fromZ);
+        parameters.vertex(toX, fromY, toZ);
+        parameters.vertex(fromX, fromY, toZ);
     }
 }
