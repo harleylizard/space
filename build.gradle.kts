@@ -19,6 +19,8 @@ dependencies {
         implementation(Lwjgl.Addons.`joml 1_10_5`)
     }
     implementation("it.unimi.dsi:fastutil:8.5.12")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.guava:guava:33.1.0-jre")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
