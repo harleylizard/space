@@ -1,6 +1,8 @@
 package com.harleylizard.space.graphics.vertex;
 
 import com.harleylizard.space.graphics.texture.Material;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.nio.ByteBuffer;
 
@@ -18,9 +20,11 @@ public final class VaryingVertexParameters implements VertexParameters {
     private VaryingVertexParameters() {}
 
     @Override
-    public void vertex(float x, float y, float z, float u, float v, Material material) {
+    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, Material material) {
+        var vec4f = matrix4f.transform(x, y, z, 1.0F, new Vector4f());
+
         grow(VERTEX_SIZE);
-        buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F).putFloat(u).putFloat(v).putFloat(material.getTexture());
+        buffer.putFloat(vec4f.x).putFloat(vec4f.y).putFloat(vec4f.z).putFloat(1.0F).putFloat(u).putFloat(v).putFloat(material.getTexture());
         vertices += VERTEX_SIZE;
     }
 

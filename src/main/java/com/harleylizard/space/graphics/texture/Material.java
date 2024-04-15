@@ -15,6 +15,10 @@ public final class Material {
         return texture;
     }
 
+    public int getNormal() {
+        return normal;
+    }
+
     public static Material getEmpty() {
         return EMPTY;
     }

@@ -1,8 +1,9 @@
 package com.harleylizard.space.graphics.shape;
 
 import com.harleylizard.space.graphics.vertex.VertexParameters;
+import org.joml.Matrix4fStack;
 
 public sealed interface Shape permits Cube, Plane {
 
-    void build(VertexParameters parameters);
+    void build(VertexParameters parameters, Matrix4fStack stack);
 }

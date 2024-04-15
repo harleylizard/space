@@ -5,6 +5,9 @@ import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
 import com.harleylizard.space.graphics.model.ModelDisplay;
+import com.harleylizard.space.graphics.modeler.ModelerGraphics;
+import com.harleylizard.space.graphics.texture.ModelTextures;
+import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -42,7 +45,10 @@ public final class Main {
             var cubeModel = modelDisplay.read("models/cube.json");
             var singular = modelDisplay.singular(cubeModel);
 
-            modelDisplay.bind();
+            var modeler = new Modeler();
+            var modelerGraphics = new ModelerGraphics();
+
+            ModelTextures.bind(0);
 
             glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
 
@@ -68,8 +74,9 @@ public final class Main {
 
                 UniformBuffer.uploadMatrices(projection, view, model);
 
+                modelerGraphics.draw(modeler);
+
                 modelProgram.bind();
-                singular.draw();
                 Quad.unbind();
                 ProgramPipeline.unbind();
 

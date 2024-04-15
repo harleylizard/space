@@ -3,8 +3,8 @@ package com.harleylizard.space.graphics.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harleylizard.space.Resources;
-import com.harleylizard.space.graphics.texture.ModelTextures;
 import com.harleylizard.space.graphics.vertex.VaryingVertexParameters;
+import org.joml.Matrix4fStack;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,16 +19,8 @@ public final class ModelDisplay {
 
     private final Map<Model, Singular> map = new HashMap<>();
 
-    private final ModelTextures textures = new ModelTextures();
-
     public Singular singular(Model model) {
         return map.computeIfAbsent(model, Singular::new);
-    }
-
-    public void and(Model model, VaryingVertexParameters parameters) {
-        for (var shape : model) {
-            shape.build(parameters);
-        }
     }
 
     public Model read(String path) {
@@ -37,10 +29,6 @@ public final class ModelDisplay {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void bind() {
-        textures.bind(0);
     }
 
     public static final class Singular {
@@ -60,8 +48,9 @@ public final class ModelDisplay {
             glVertexArrayElementBuffer(vao, ebo);
 
             var parameters = VaryingVertexParameters.create();
+            var stack = new Matrix4fStack(1);
             for (var shape : model) {
-                shape.build(parameters);
+                shape.build(parameters, stack);
             }
             parameters.triangulate();
 

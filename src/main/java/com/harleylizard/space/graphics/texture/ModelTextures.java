@@ -21,7 +21,9 @@ public final class ModelTextures {
     private static final int WIDTH = 16;
     private static final int HEIGHT = 16;
 
-    public void bind(int unit) {
+    private ModelTextures() {}
+
+    public static void bind(int unit) {
         try (var stack = MemoryStack.stackPush()) {
             var buffer = stack.callocInt(3);
 
