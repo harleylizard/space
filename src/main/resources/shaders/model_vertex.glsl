@@ -13,6 +13,9 @@ out gl_PerVertex {
     vec4 gl_Position;
 };
 
+out vec2 m_uv;
+
 void main() {
     gl_Position = projection * view * model * position;
+    m_uv = uv;
 }

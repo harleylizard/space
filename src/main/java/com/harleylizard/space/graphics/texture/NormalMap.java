@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
-import static org.lwjgl.system.MemoryUtil.memCalloc;
 import static org.lwjgl.system.MemoryUtil.memFree;
 
 public final class NormalMap {
@@ -21,23 +20,19 @@ public final class NormalMap {
 
     private NormalMap() {}
 
-    public static ByteBuffer from(String path) {
-        try {
-            if (!Files.isDirectory(CACHE)) {
-                Files.createDirectories(CACHE);
-            }
-            var fileName = path.substring(path.lastIndexOf("/") + 1);
+    public static ByteBuffer from(String path) throws IOException {
+        if (!Files.isDirectory(CACHE)) {
+            Files.createDirectories(CACHE);
+        }
+        var fileName = path.substring(path.lastIndexOf("/") + 1);
 
-            var systemPath = CACHE.resolve(fileName);
-            if (!Files.isRegularFile(systemPath)) {
-                return create(path, systemPath);
-            } else {
-                try (var stream = Files.newInputStream(systemPath)) {
-                    return Resources.readImage(stream);
-                }
+        var systemPath = CACHE.resolve(fileName);
+        if (!Files.isRegularFile(systemPath)) {
+            return create(path, systemPath);
+        } else {
+            try (var stream = Files.newInputStream(systemPath)) {
+                return Resources.readImage(stream);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -79,16 +74,12 @@ public final class NormalMap {
             }
 
             ImageIO.write(bufferedImage, "png", outputStream);
-            try {
-                var colors = bufferedImage.getRGB(0, 0, width, height, null, 0, width);
-                var byteBuffer = memCalloc(colors.length * 4);
-                for (var color : colors) {
-                    byteBuffer.putInt(color);
-                }
-                return byteBuffer;
-            } finally {
-                stbi_image_free(pixels);
-                memFree(image);
+            outputStream.flush();
+            stbi_image_free(pixels);
+            memFree(image);
+
+            try (var inputStream = Files.newInputStream(systemPath)) {
+                return Resources.readImage(inputStream);
             }
         }
     }

@@ -5,13 +5,11 @@ import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
 import com.harleylizard.space.graphics.model.ModelDisplay;
-import com.harleylizard.space.graphics.texture.NormalMap;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.system.MemoryUtil.memFree;
 
 public final class Main {
 
@@ -49,10 +47,7 @@ public final class Main {
             var angle = 0.0F;
 
             glEnable(GL_CULL_FACE);
-
-            var normalMap = NormalMap.from("textures/dirt.png");
-
-            memFree(normalMap);
+            glEnable(GL_DEPTH_TEST);
 
             while (!window.shouldClose()) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

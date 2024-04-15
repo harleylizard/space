@@ -1,16 +1,70 @@
 package com.harleylizard.space.graphics.texture;
 
+import com.harleylizard.space.Resources;
+import org.lwjgl.system.MemoryStack;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.stb.STBImage.nstbi_image_free;
+import static org.lwjgl.stb.STBImage.nstbi_load_from_memory;
+import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.memFree;
+
 public final class ModelTextures {
+    private static final int WIDTH = 16;
+    private static final int HEIGHT = 16;
+
     private final List<String> textures = new ArrayList<>();
 
     public void delegate(String path) {
         textures.add(path);
     }
 
-    public void create() {
+    public void bind(int unit) {
+        try (var stack = MemoryStack.stackPush()) {
+            var buffer = stack.callocInt(3);
 
+            var texture = glCreateTextures(GL_TEXTURE_2D_ARRAY);
+
+            glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+            glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+            var size = textures.size();
+            glTextureStorage3D(texture, 2, GL_RGBA8, WIDTH, HEIGHT, size * 2);
+
+            var i = 0;
+            for (var path : textures) {
+                var image = Resources.readImage(Resources.get(path));
+                var normalMap = NormalMap.from(path);
+                loadImage(texture, buffer, image, i);
+                loadImage(texture, buffer, normalMap, i + 1);
+                i += 2;
+            }
+            glGenerateTextureMipmap(texture);
+            glBindTextureUnit(unit, texture);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void loadImage(int texture, IntBuffer buffer, ByteBuffer image, int i) throws IOException {
+        var pixels = nstbi_load_from_memory(memAddress(image), image.remaining(), memAddress(buffer), memAddress(buffer) + 4, memAddress(buffer) + 8, 4);
+        if (pixels == NULL) {
+            memFree(image);
+            throw new RuntimeException("Failed to load pixels");
+        }
+        var width = buffer.get(0);
+        var height = buffer.get(1);
+        glTextureSubImage3D(texture, 0, 0, 0, i, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+        nstbi_image_free(pixels);
+        memFree(image);
     }
 }

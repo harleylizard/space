@@ -22,7 +22,7 @@ public final class VaryingVertexParameters implements VertexParameters {
 
     @Override
     public void triangulate() {
-        var quads = (vertices / 6) / 24;
+        var quads = (vertices / 4) / 24;
         grow(6 * 4 * quads);
         var last = 0;
         for (var i = 0; i < quads; i++) {

@@ -23,7 +23,7 @@ public final class ModelDisplay {
 
     {
         textures.delegate("textures/dirt.png");
-        textures.create();
+        textures.bind(0);
     }
 
     public Singular singular(Model model) {
