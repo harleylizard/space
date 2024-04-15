@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public sealed interface VertexParameters permits VaryingVertexParameters {
 
-    void vertex(float x, float y, float z);
+    void vertex(float x, float y, float z, float u, float v);
 
     void triangulate();
 

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public final class VaryingVertexParameters implements VertexParameters {
-    private static final int AMOUNT = 16 * 4;
+    private static final int AMOUNT = 24 * 4;
 
     private ByteBuffer buffer = memCalloc(AMOUNT);
     private int vertices;
@@ -14,15 +14,15 @@ public final class VaryingVertexParameters implements VertexParameters {
     private VaryingVertexParameters() {}
 
     @Override
-    public void vertex(float x, float y, float z) {
-        grow(4 * 4);
-        buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F);
-        vertices += 4 * 4;
+    public void vertex(float x, float y, float z, float u, float v) {
+        grow(6 * 4);
+        buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F).putFloat(u).putFloat(v);
+        vertices += 6 * 4;
     }
 
     @Override
     public void triangulate() {
-        var quads = (vertices / 4) / 16;
+        var quads = (vertices / 6) / 24;
         grow(6 * 4 * quads);
         var last = 0;
         for (var i = 0; i < quads; i++) {

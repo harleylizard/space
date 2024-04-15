@@ -5,11 +5,13 @@ import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
 import com.harleylizard.space.graphics.model.ModelDisplay;
+import com.harleylizard.space.graphics.texture.NormalMap;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.system.MemoryUtil.memFree;
 
 public final class Main {
 
@@ -29,6 +31,10 @@ public final class Main {
                     .useProgram(Shader.FRAGMENT, "shaders/quad_fragment.glsl")
                     .useProgram(Shader.VERTEX, "shaders/quad_vertex.glsl")
                     .build();
+            var modelProgram = new ProgramPipeline.Builder()
+                    .useProgram(Shader.FRAGMENT, "shaders/model_fragment.glsl")
+                    .useProgram(Shader.VERTEX, "shaders/model_vertex.glsl")
+                    .build();
 
             var projection = new Matrix4f();
             var view = new Matrix4f();
@@ -43,6 +49,10 @@ public final class Main {
             var angle = 0.0F;
 
             glEnable(GL_CULL_FACE);
+
+            var normalMap = NormalMap.from("textures/dirt.png");
+
+            memFree(normalMap);
 
             while (!window.shouldClose()) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -61,10 +71,9 @@ public final class Main {
 
                 UniformBuffer.uploadMatrices(projection, view, model);
 
-                program.bind();
+                modelProgram.bind();
                 singular.draw();
                 Quad.unbind();
-
                 ProgramPipeline.unbind();
 
                 window.refresh();

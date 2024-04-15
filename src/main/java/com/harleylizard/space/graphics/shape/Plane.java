@@ -17,9 +17,9 @@ public final class Plane implements Shape {
 
     @Override
     public void build(VertexParameters parameters) {
-        parameters.vertex(fromX, fromY, 0.0F);
-        parameters.vertex(toX, fromY, 0.0F);
-        parameters.vertex(toX, toY, 0.0F);
-        parameters.vertex(fromX, toY, 0.0F);
+        parameters.vertex(fromX, fromY, 0.0F, 0.0F, 0.0F);
+        parameters.vertex(toX, fromY, 0.0F, 0.0F, 0.0F);
+        parameters.vertex(toX, toY, 0.0F, 0.0F, 0.0F);
+        parameters.vertex(fromX, toY, 0.0F, 0.0F, 0.0F);
     }
 }

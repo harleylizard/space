@@ -3,6 +3,7 @@ package com.harleylizard.space.graphics.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harleylizard.space.Resources;
+import com.harleylizard.space.graphics.texture.ModelTextures;
 import com.harleylizard.space.graphics.vertex.VaryingVertexParameters;
 
 import java.io.BufferedReader;
@@ -17,6 +18,13 @@ public final class ModelDisplay {
     private final Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, Model.DESERIALIZER).create();
 
     private final Map<Model, Singular> map = new HashMap<>();
+
+    private final ModelTextures textures = new ModelTextures();
+
+    {
+        textures.delegate("textures/dirt.png");
+        textures.create();
+    }
 
     public Singular singular(Model model) {
         return map.computeIfAbsent(model, Singular::new);
@@ -44,9 +52,11 @@ public final class ModelDisplay {
         private final int count;
 
         private Singular(Model model) {
-            glVertexArrayVertexBuffer(vao, 0, vbo, 0, 16);
+            glVertexArrayVertexBuffer(vao, 0, vbo, 0, (4 + 2) * 4);
             glVertexArrayAttribBinding(vao, 0, 0);
+            glVertexArrayAttribBinding(vao, 1, 0);
             glVertexArrayAttribFormat(vao, 0, 4, GL_FLOAT, false, 0);
+            glVertexArrayAttribFormat(vao, 1, 2, GL_FLOAT, false, 16);
 
             glVertexArrayElementBuffer(vao, ebo);
 
@@ -68,10 +78,12 @@ public final class ModelDisplay {
             glBindVertexArray(vao);
 
             glEnableVertexArrayAttrib(vao, 0);
+            glEnableVertexArrayAttrib(vao, 1);
 
             glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
 
             glDisableVertexArrayAttrib(vao, 0);
+            glDisableVertexArrayAttrib(vao, 1);
         }
     }
 }
