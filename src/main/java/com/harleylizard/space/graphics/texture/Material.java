@@ -11,7 +11,11 @@ public final class Material {
         this.normal = normal;
     }
 
-    public static Material empty() {
+    public int getTexture() {
+        return texture;
+    }
+
+    public static Material getEmpty() {
         return EMPTY;
     }
 }

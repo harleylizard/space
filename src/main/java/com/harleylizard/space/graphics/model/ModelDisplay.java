@@ -21,11 +21,6 @@ public final class ModelDisplay {
 
     private final ModelTextures textures = new ModelTextures();
 
-    {
-        textures.delegate("textures/dirt.png");
-        textures.bind(0);
-    }
-
     public Singular singular(Model model) {
         return map.computeIfAbsent(model, Singular::new);
     }
@@ -44,6 +39,10 @@ public final class ModelDisplay {
         }
     }
 
+    public void bind() {
+        textures.bind(0);
+    }
+
     public static final class Singular {
         private final int vao = glCreateVertexArrays();
         private final int vbo = glCreateBuffers();
@@ -52,11 +51,11 @@ public final class ModelDisplay {
         private final int count;
 
         private Singular(Model model) {
-            glVertexArrayVertexBuffer(vao, 0, vbo, 0, (4 + 2) * 4);
+            glVertexArrayVertexBuffer(vao, 0, vbo, 0, VaryingVertexParameters.VERTEX_SIZE);
             glVertexArrayAttribBinding(vao, 0, 0);
             glVertexArrayAttribBinding(vao, 1, 0);
             glVertexArrayAttribFormat(vao, 0, 4, GL_FLOAT, false, 0);
-            glVertexArrayAttribFormat(vao, 1, 2, GL_FLOAT, false, 16);
+            glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, false, 16);
 
             glVertexArrayElementBuffer(vao, ebo);
 

@@ -42,6 +42,8 @@ public final class Main {
             var cubeModel = modelDisplay.read("models/cube.json");
             var singular = modelDisplay.singular(cubeModel);
 
+            modelDisplay.bind();
+
             glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
 
             var angle = 0.0F;

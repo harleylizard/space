@@ -1,11 +1,15 @@
 package com.harleylizard.space.graphics.vertex;
 
+import com.harleylizard.space.graphics.texture.Material;
+
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.system.MemoryUtil.*;
 
 public final class VaryingVertexParameters implements VertexParameters {
-    private static final int AMOUNT = 24 * 4;
+    public static final int VERTEX_SIZE = 7 * 4;
+
+    private static final int AMOUNT = VERTEX_SIZE * 4;
 
     private ByteBuffer buffer = memCalloc(AMOUNT);
     private int vertices;
@@ -14,15 +18,15 @@ public final class VaryingVertexParameters implements VertexParameters {
     private VaryingVertexParameters() {}
 
     @Override
-    public void vertex(float x, float y, float z, float u, float v) {
-        grow(6 * 4);
-        buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F).putFloat(u).putFloat(v);
-        vertices += 6 * 4;
+    public void vertex(float x, float y, float z, float u, float v, Material material) {
+        grow(VERTEX_SIZE);
+        buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F).putFloat(u).putFloat(v).putFloat(material.getTexture());
+        vertices += VERTEX_SIZE;
     }
 
     @Override
     public void triangulate() {
-        var quads = (vertices / 4) / 24;
+        var quads = (vertices / 4) / VERTEX_SIZE;
         grow(6 * 4 * quads);
         var last = 0;
         for (var i = 0; i < quads; i++) {

@@ -22,9 +22,7 @@ public final class TextureLookup {
     }
 
     public Material getMaterial(String name) {
-        var path = getPath(name);
-
-        return Material.empty();
+        return !map.containsKey(name) ? Material.getEmpty() : MaterialManager.getInstance().getMaterial(getPath(name));
     }
 
     public static TextureLookup fromJson(JsonObject jsonObject) {

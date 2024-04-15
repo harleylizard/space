@@ -21,12 +21,6 @@ public final class ModelTextures {
     private static final int WIDTH = 16;
     private static final int HEIGHT = 16;
 
-    private final List<String> textures = new ArrayList<>();
-
-    public void delegate(String path) {
-        textures.add(path);
-    }
-
     public void bind(int unit) {
         try (var stack = MemoryStack.stackPush()) {
             var buffer = stack.callocInt(3);
@@ -35,6 +29,8 @@ public final class ModelTextures {
 
             glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
             glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+            var textures = MaterialManager.getInstance().getPaths();
 
             var size = textures.size();
             glTextureStorage3D(texture, 2, GL_RGBA8, WIDTH, HEIGHT, size * 2);

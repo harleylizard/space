@@ -1,5 +1,6 @@
 package com.harleylizard.space.graphics.shape;
 
+import com.harleylizard.space.graphics.texture.Material;
 import com.harleylizard.space.graphics.vertex.VertexParameters;
 
 public final class Plane implements Shape {
@@ -17,9 +18,9 @@ public final class Plane implements Shape {
 
     @Override
     public void build(VertexParameters parameters) {
-        parameters.vertex(fromX, fromY, 0.0F, 0.0F, 0.0F);
-        parameters.vertex(toX, fromY, 0.0F, 0.0F, 0.0F);
-        parameters.vertex(toX, toY, 0.0F, 0.0F, 0.0F);
-        parameters.vertex(fromX, toY, 0.0F, 0.0F, 0.0F);
+        parameters.vertex(fromX, fromY, 0.0F, 0.0F, 0.0F, Material.getEmpty());
+        parameters.vertex(toX, fromY, 0.0F, 0.0F, 0.0F, Material.getEmpty());
+        parameters.vertex(toX, toY, 0.0F, 0.0F, 0.0F, Material.getEmpty());
+        parameters.vertex(fromX, toY, 0.0F, 0.0F, 0.0F, Material.getEmpty());
     }
 }

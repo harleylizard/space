@@ -1,6 +1,7 @@
 {
   "textures": {
-    "dirt": "textures/dirt.png"
+    "dirt": "textures/dirt.png",
+    "brick": "textures/brick.png"
   },
   "shapes": [
     {
@@ -9,11 +10,11 @@
       "to": [16, 16, 16],
       "face": {
         "north": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "east": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "south": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "west": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "up": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "down": { "uv": [0, 0, 16, 16], "texture": "dirt" }
+        "east": { "uv": [0, 0, 16, 16], "texture": "brick" },
+        "south": { "uv": [0, 0, 16, 16], "texture": "brick" },
+        "west": { "uv": [0, 0, 16, 16], "texture": "brick" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "brick" },
+        "dirt": { "uv": [0, 0, 16, 16], "texture": "brick" }
       }
     },
     {
