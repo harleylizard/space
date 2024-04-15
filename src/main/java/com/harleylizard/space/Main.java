@@ -57,6 +57,9 @@ public final class Main {
             glEnable(GL_CULL_FACE);
             glEnable(GL_DEPTH_TEST);
 
+            //glEnable(GL_BLEND);
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
             while (!window.shouldClose()) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -67,10 +70,11 @@ public final class Main {
                 projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
 
                 view.identity();
-                view.translate(0.0F, 0.0F, -10.0F);
+                view.translate(0.0F, 0.0F, -5.0F);
+                view.rotate((float) Math.toRadians(angle += 0.25F), 0.0F, 1.0F, 0.0F);
 
                 model.identity();
-                model.rotate((float) Math.toRadians(angle++), 0.0F, 1.0F, 0.0F);
+                model.translate(-15.5F, -4.0F, -15.5F);
 
                 UniformBuffer.uploadMatrices(projection, view, model);
 

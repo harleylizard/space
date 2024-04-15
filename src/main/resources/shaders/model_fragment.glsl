@@ -1,11 +1,49 @@
 #version 460 core
 
+const float constant = 1.0F;
+const float linear = 0.09F;
+const float quadratic = 0.032F;
+
 out vec4 color;
 
+in vec4 m_position;
 in vec3 m_uv;
+in vec3 m_normal;
 
-uniform sampler2DArray textureSampler;
+uniform sampler2DArray tSampler;
+
+uniform int size;
+
+struct Light {
+    vec4 position;
+    vec4 color;
+};
+
+layout (binding = 0) buffer lightsBuffer {
+    Light lights[];
+};
+
+vec4 spherical(Light light) {
+    vec3 normal = normalize(m_normal);
+
+    vec3 magnitude = light.position.xyz - vec3(-m_position.x, m_position.y, -m_position.z);
+    vec3 direction = normalize(magnitude);
+
+    float intensity = max(dot(normal, direction), 0.0F) * (10.0F * light.color.w);
+
+    float distance = length(magnitude);
+    float attenuation = 1.0F / ((constant + linear) * distance + quadratic * distance * distance);
+
+    return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
+}
 
 void main() {
-    color = texture(textureSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F);
+    vec4 result = vec4(0.0F);
+
+    for(int i = 0; i < 12; ++i) {
+        result += spherical(lights[i]);
+    }
+    result = vec4(min(result.x, 1.0F), min(result.y, 1.0F), min(result.z, 1.0F), min(result.w, 1.0F));
+
+    color = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F) * result;
 }

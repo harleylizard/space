@@ -8,6 +8,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import java.io.IOException;
 
 import static org.lwjgl.opengl.GL41.*;
+import static org.lwjgl.opengl.GL43.*;
+import static org.lwjgl.opengl.GL45.glCreateBuffers;
 import static org.lwjgl.opengl.GL45.glCreateProgramPipelines;
 
 public final class ProgramPipeline {
@@ -24,6 +26,14 @@ public final class ProgramPipeline {
 
     public void bind() {
         glBindProgramPipeline(pipeline);
+    }
+
+    public int getProgram(Shader shader) {
+        return programs.getInt(shader);
+    }
+
+    public int getBuffer(String name) {
+        return buffers.getInt(name);
     }
 
     public static void unbind() {
@@ -46,6 +56,18 @@ public final class ProgramPipeline {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        public Builder useBuffer(Shader shader, String name, int binding) {
+            var buffer = glCreateBuffers();
+            var program = programs.getInt(shader);
+
+            var i = glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, name);
+            glShaderStorageBlockBinding(program, i, binding);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, buffer);
+
+            buffers.put(name, buffer);
+            return this;
         }
 
         public ProgramPipeline build() {

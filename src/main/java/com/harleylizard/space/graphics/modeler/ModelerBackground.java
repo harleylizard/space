@@ -2,6 +2,7 @@ package com.harleylizard.space.graphics.modeler;
 
 import com.harleylizard.space.Resources;
 import com.harleylizard.space.block.Block;
+import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.model.ModelReader;
 import com.harleylizard.space.graphics.vertex.VaryingVertexParameters;
 import com.harleylizard.space.modeler.ModelerBlocks;
@@ -18,17 +19,20 @@ import static org.lwjgl.opengl.GL45.*;
 
 public final class ModelerBackground {
     private final int vao = glCreateVertexArrays();
-    private final int vbo = glCreateBuffers();
-    private final int ebo = glCreateBuffers();
 
     private final int count;
 
-    private ModelerBackground(int[] blocks, List<Block> palette) throws IOException {
+    private ModelerBackground(int[] blocks, List<Block> palette, Lights lights) throws IOException {
+        var vbo = glCreateBuffers();
+        var ebo = glCreateBuffers();
+
         glVertexArrayVertexBuffer(vao, 0, vbo, 0, VaryingVertexParameters.VERTEX_SIZE);
         glVertexArrayAttribBinding(vao, 0, 0);
         glVertexArrayAttribBinding(vao, 1, 0);
+        glVertexArrayAttribBinding(vao, 2, 0);
         glVertexArrayAttribFormat(vao, 0, 4, GL_FLOAT, false, 0);
         glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, false, 16);
+        glVertexArrayAttribFormat(vao, 2, 3, GL_FLOAT, false, 28);
 
         glVertexArrayElementBuffer(vao, ebo);
 
@@ -44,6 +48,10 @@ public final class ModelerBackground {
             stack.translate(x, y, z);
 
             var block = palette.get(blocks[i]);
+            if (block == ModelerBlocks.MODELER_GLOW) {
+                lights.add(1.0F, 1.0F, 1.0F).move(x - 15.5F, y, z - 15.5F);
+            }
+
             var model = ModelReader.getModel(ModelerBlocks.REGISTRY, block);
             for (var shape : model) {
                 shape.build(parameters, stack);
@@ -65,14 +73,16 @@ public final class ModelerBackground {
 
         glEnableVertexArrayAttrib(vao, 0);
         glEnableVertexArrayAttrib(vao, 1);
+        glEnableVertexArrayAttrib(vao, 2);
 
         glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
 
         glDisableVertexArrayAttrib(vao, 0);
         glDisableVertexArrayAttrib(vao, 1);
+        glDisableVertexArrayAttrib(vao, 2);
     }
 
-    public static ModelerBackground of(String path) {
+    public static ModelerBackground of(String path, Lights lights) {
         try (var dataInput = new DataInputStream(Resources.get(path))) {
             var size = 32 * 32 * 32;
             var blocks = new int[size];
@@ -86,7 +96,7 @@ public final class ModelerBackground {
             for (var i = 0; i < size; i++) {
                 palette.add(ModelerBlocks.REGISTRY.get(dataInput.readUTF()));
             }
-            return new ModelerBackground(blocks, Collections.unmodifiableList(palette));
+            return new ModelerBackground(blocks, Collections.unmodifiableList(palette), lights);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public final class VaryingVertexParameters implements VertexParameters {
-    public static final int VERTEX_SIZE = 7 * 4;
+    public static final int VERTEX_SIZE = 10 * 4;
 
     private static final int AMOUNT = VERTEX_SIZE * 4;
 
@@ -20,11 +20,14 @@ public final class VaryingVertexParameters implements VertexParameters {
     private VaryingVertexParameters() {}
 
     @Override
-    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, Material material) {
+    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, Material material, float nx, float ny, float nz) {
         var vec4f = matrix4f.transform(x, y, z, 1.0F, new Vector4f());
 
         grow(VERTEX_SIZE);
-        buffer.putFloat(vec4f.x).putFloat(vec4f.y).putFloat(vec4f.z).putFloat(1.0F).putFloat(u).putFloat(v).putFloat(material.getTexture());
+        buffer
+                .putFloat(vec4f.x).putFloat(vec4f.y).putFloat(vec4f.z).putFloat(1.0F)
+                .putFloat(u).putFloat(v).putFloat(material.getTexture())
+                .putFloat(nx).putFloat(ny).putFloat(nz);
         vertices += VERTEX_SIZE;
     }
 

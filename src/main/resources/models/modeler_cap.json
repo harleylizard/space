@@ -1,6 +1,7 @@
 {
   "textures": {
-    "dirt": "textures/dirt.png"
+    "side": "textures/modeler_cap.png",
+    "bottom": "textures/modeler_cap_bottom.png"
   },
   "shapes": [
     {
@@ -8,12 +9,12 @@
       "from": [0, 0, 0],
       "to": [16, 16, 16],
       "face": {
-        "north": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "east": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "south": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "west": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "up": { "uv": [0, 0, 16, 16], "texture": "dirt" },
-        "down": { "uv": [0, 0, 16, 16], "texture": "dirt" }
+        "north": { "uv": [0, 0, 16, 16], "texture": "side" },
+        "east": { "uv": [0, 0, 16, 16], "texture": "side" },
+        "south": { "uv": [0, 0, 16, 16], "texture": "side" },
+        "west": { "uv": [0, 0, 16, 16], "texture": "side" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "side" },
+        "down": { "uv": [0, 0, 16, 16], "texture": "bottom" }
       }
     }
   ]

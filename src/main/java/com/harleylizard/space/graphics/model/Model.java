@@ -72,11 +72,13 @@ public final class Model implements Iterable<Shape> {
             case "plane" -> {
                 var from = jsonObject.getAsJsonArray("from");
                 var to = jsonObject.getAsJsonArray("to");
+                var faces = createPlaneFaces(lookup, jsonObject.getAsJsonObject("face"));
                 return new Plane(
                         from.get(0).getAsFloat() / 16.0F,
                         from.get(1).getAsFloat() / 16.0F,
                         to.get(0).getAsFloat() / 16.0F,
-                        to.get(1).getAsFloat() / 16.0F
+                        to.get(1).getAsFloat() / 16.0F,
+                        faces
                 );
             }
             default -> throw new RuntimeException("Unknown shape %s".formatted(type));
@@ -87,6 +89,28 @@ public final class Model implements Iterable<Shape> {
         var map = new EnumMap<Direction, Face>(Direction.class);
 
         for (var direction : Direction.values()) {
+            var name = direction.getName();
+            if (jsonObject.has(name)) {
+                var jsonObject1 = jsonObject.getAsJsonObject(name);
+                var uv = jsonObject1.getAsJsonArray("uv");
+
+                var texture = jsonObject1.getAsJsonPrimitive("texture").getAsString();
+                var material = lookup.getMaterial(texture);
+
+                map.put(direction, new Face(0,
+                        uv.get(0).getAsFloat() / 16.0F,
+                        uv.get(1).getAsFloat() / 16.0F,
+                        uv.get(2).getAsFloat() / 16.0F,
+                        uv.get(3).getAsFloat() / 16.0F, material));
+            }
+        }
+        return Collections.unmodifiableMap(map);
+    }
+
+    private static Map<Plane.Direction, Face> createPlaneFaces(TextureLookup lookup, JsonObject jsonObject) {
+        var map = new EnumMap<Plane.Direction, Face>(Plane.Direction.class);
+
+        for (var direction : Plane.Direction.values()) {
             var name = direction.getName();
             if (jsonObject.has(name)) {
                 var jsonObject1 = jsonObject.getAsJsonObject(name);
