@@ -51,7 +51,7 @@ public final class ModelerBackground implements CullGetter {
                 }
                 var parameters = layers.getVertexParameter(model.getLayer());
                 for (var shape : model) {
-                    shape.build(this, parameters, stack, x, y, z);
+                    shape.build(this, parameters, stack, x, y, z, model.isAmbient());
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package com.harleylizard.space.graphics.vertex;
 
 import com.harleylizard.space.graphics.texture.Material;
+import com.harleylizard.space.math.ImmutableVector3i;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -29,6 +30,11 @@ public final class VaryingVertexParameters implements VertexParameters {
                 .putFloat(u).putFloat(v).putFloat(material.getTexture())
                 .putFloat(nx).putFloat(ny).putFloat(nz);
         vertices += VERTEX_SIZE;
+    }
+
+    @Override
+    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, Material material, ImmutableVector3i normal) {
+        vertex(matrix4f, x, y, z, u, v, material, normal.getX(), normal.getY(), normal.getZ());
     }
 
     @Override

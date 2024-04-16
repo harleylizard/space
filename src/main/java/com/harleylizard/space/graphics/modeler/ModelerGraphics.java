@@ -39,6 +39,8 @@ public final class ModelerGraphics {
     {
         background.upload(layers, lights);
         layers.upload();
+
+        lights.add(1.0F, 1.0F, 1.0F, 0.125F).move(15.5F, 4.0F, 15.5F);
     }
 
     public void draw(Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {

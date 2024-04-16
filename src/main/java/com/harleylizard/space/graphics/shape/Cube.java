@@ -28,7 +28,7 @@ public final class Cube implements Shape {
     }
 
     @Override
-    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z) {
+    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z, boolean ambient) {
         if (hasFace(cullGetter, Direction.NORTH, x, y, z)) {
             var face = faces.get(Direction.NORTH);
             var minU = face.getMinU();

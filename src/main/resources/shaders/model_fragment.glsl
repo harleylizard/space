@@ -29,32 +29,50 @@ layout (binding = 0) buffer lightsBuffer {
 vec4 spherical(Light light) {
     vec3 normal = m_normal;
 
-    vec3 magnitude = light.position.xyz - vec3(m_position.x, m_position.y, m_position.z);
-    vec3 direction = normalize(magnitude);
-
-    vec3 transformed = normalize(normal);
-    float intensity = max(dot(transformed, direction), 0.0F) * (10.0F * light.color.w * 1.0F);
+    vec3 magnitude = light.position.xyz - m_position.xyz;
 
     float distance = length(magnitude);
     float attenuation = 1.0F / ((constant + linear) * distance + quadratic * distance * distance);
 
-    float rangeAttenuation = smoothstep(0.0, 1.0F, distance);
+    vec3 transformed = normalize(normal);
 
-    return vec4((light.color.rgb * intensity) * attenuation * rangeAttenuation, 1.0F);
+    float direction = dot(normalize(normal), normalize(magnitude));
+    float intensity = max(direction, 0.0F) * (10.0F * light.color.w);
+
+    return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
+}
+
+vec4 sphericalAmbient(Light light) {
+    vec3 magnitude = light.position.xyz - m_position.xyz;
+
+    float distance = length(magnitude);
+    float attenuation = 1.0F / ((constant + linear) * distance + quadratic * distance * distance);
+
+    vec3 direction = normalize(magnitude);
+    float intensity = max(direction.r, 0.0F) * (10.0F * light.color.w);
+
+    return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
 }
 
 void main() {
     vec4 result = vec4(0.0F);
+    vec4 ambient = vec4(0.0F);
 
     for(int i = 0; i < size; ++i) {
-        result += spherical(lights[i]);
+        Light light = lights[i];
+        result += spherical(light);
+        ambient += sphericalAmbient(light);
     }
 
     result = vec4(min(result.x, 1.0F), min(result.y, 1.0F), min(result.z, 1.0F), min(result.w, 1.0F));
+    ambient = vec4(min(ambient.x, 1.0F), min(ambient.y, 1.0F), min(ambient.z, 1.0F), min(ambient.w, 1.0F));
 
     vec4 pixel = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F);
     color = pixel * result;
 
+    if (m_normal.xyz == 0) {
+        color = pixel * ambient;
+    }
     if (emissiveMap.r > 0) {
         color = pixel;
     }

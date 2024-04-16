@@ -19,20 +19,26 @@ import java.util.*;
 public final class Model implements Iterable<Shape> {
     public static final JsonDeserializer<Model> DESERIALIZER = Model::fromJson;
 
-    private static final Model EMPTY = new Model(List.of(), Layer.SOLID, 0);
+    private static final Model EMPTY = new Model(List.of(), Layer.SOLID, 0, false);
 
     private final List<Shape> shapes;
     private final Layer layer;
     private final int light;
+    private final boolean ambient;
 
-    private Model(List<Shape> shapes, Layer layer, int light) {
+    private Model(List<Shape> shapes, Layer layer, int light, boolean ambient) {
         this.shapes = shapes;
         this.layer = layer;
         this.light = light;
+        this.ambient = ambient;
     }
 
     public boolean isEmpty() {
         return shapes.isEmpty();
+    }
+
+    public boolean isAmbient() {
+        return ambient;
     }
 
     public Layer getLayer() {
@@ -68,6 +74,11 @@ public final class Model implements Iterable<Shape> {
             light = Color.pack(r, g, b, a);
         }
 
+        var ambient = false;
+        if (jsonObject.has("ambient")) {
+            ambient = jsonObject.getAsJsonPrimitive("ambient").getAsBoolean();
+        }
+
         var jsonArray = jsonObject.getAsJsonArray("shapes");
         var size = jsonArray.size();
         if (size == 0) {
@@ -78,7 +89,7 @@ public final class Model implements Iterable<Shape> {
         for (JsonElement element : jsonArray) {
             shapes.add(createShape(lookup, element.getAsJsonObject()));
         }
-        return new Model(Collections.unmodifiableList(shapes), layer, light);
+        return new Model(Collections.unmodifiableList(shapes), layer, light, ambient);
     }
 
     private static Shape createShape(TextureLookup lookup, JsonObject jsonObject) {

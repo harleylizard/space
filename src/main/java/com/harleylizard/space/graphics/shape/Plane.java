@@ -2,6 +2,7 @@ package com.harleylizard.space.graphics.shape;
 
 import com.harleylizard.space.graphics.vertex.CullGetter;
 import com.harleylizard.space.graphics.vertex.VertexParameters;
+import com.harleylizard.space.math.ImmutableVector3i;
 import org.joml.Matrix4fStack;
 
 import java.util.Map;
@@ -29,7 +30,7 @@ public final class Plane implements Shape {
     }
 
     @Override
-    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z) {
+    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z, boolean ambient) {
         stack.pushMatrix();
         stack.translate(0.5F, 0.5F, 0.5F);
         stack.rotate(this.x, 1.0F, 0.0F, 0.0F);
@@ -44,10 +45,12 @@ public final class Plane implements Shape {
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
             var material = face.getMaterial();
-            parameters.vertex(stack, fromX, fromY, 0.5F, minU, maxV, material, 0, 0, -1);
-            parameters.vertex(stack, toX, fromY, 0.5F, maxU, maxV, material, 0, 0, -1);
-            parameters.vertex(stack, toX, toY, 0.5F, maxU, minV, material, 0, 0, -1);
-            parameters.vertex(stack, fromX, toY, 0.5F, minU, minV, material, 0, 0, -1);
+
+            var normal = ambient ? new ImmutableVector3i(0, 0, 0) : new ImmutableVector3i(0, 0, -1);
+            parameters.vertex(stack, fromX, fromY, 0.5F, minU, maxV, material, normal);
+            parameters.vertex(stack, toX, fromY, 0.5F, maxU, maxV, material, normal);
+            parameters.vertex(stack, toX, toY, 0.5F, maxU, minV, material, normal);
+            parameters.vertex(stack, fromX, toY, 0.5F, minU, minV, material, normal);
         }
         if (faces.containsKey(Direction.BACK)) {
             var face = faces.get(Direction.BACK);
@@ -56,10 +59,12 @@ public final class Plane implements Shape {
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
             var material = face.getMaterial();
-            parameters.vertex(stack, toX, fromY, 0.5F, minU, maxV, material, 0, 0, 1);
-            parameters.vertex(stack, fromX, fromY, 0.5F, maxU, maxV, material, 0, 0, 1);
-            parameters.vertex(stack, fromX, toY, 0.5F, maxU, minV, material, 0, 0, 1);
-            parameters.vertex(stack, toX, toY, 0.5F, minU, minV, material, 0, 0, 1);
+
+            var normal = ambient ? new ImmutableVector3i(0, 0, 0) : new ImmutableVector3i(0, 0, 1);
+            parameters.vertex(stack, toX, fromY, 0.5F, minU, maxV, material, normal);
+            parameters.vertex(stack, fromX, fromY, 0.5F, maxU, maxV, material, normal);
+            parameters.vertex(stack, fromX, toY, 0.5F, maxU, minV, material, normal);
+            parameters.vertex(stack, toX, toY, 0.5F, minU, minV, material, normal);
         }
         stack.popMatrix();
     }
