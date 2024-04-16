@@ -37,9 +37,8 @@ public final class ModelerGraphics {
     private float angle;
 
     {
-        background.upload(layers);
+        background.upload(layers, lights);
         layers.upload();
-        lights.add(1.0F, 1.0F, 1.0F, 1.0F, 1.0F).move(-15.5F, -4.0F, -15.5F);
     }
 
     public void draw(Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
@@ -72,8 +71,9 @@ public final class ModelerGraphics {
             var r = light.getR();
             var g = light.getG();
             var b = light.getB();
+            var a = light.getA();
             buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F);
-            buffer.putFloat(r).putFloat(g).putFloat(b).putFloat(1.0F);
+            buffer.putFloat(r).putFloat(g).putFloat(b).putFloat(a);
         }
         buffer.position(0);
 

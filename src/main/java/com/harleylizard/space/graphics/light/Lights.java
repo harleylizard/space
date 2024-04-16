@@ -7,8 +7,8 @@ import java.util.List;
 public final class Lights implements Iterable<Light> {
     private final List<Light> list = new ArrayList<>();
 
-    public Light add(float r, float g, float b, float range, float intensity) {
-        var light = Light.of(r, g, b, range, intensity);
+    public Light add(int color) {
+        var light = Light.of(color);
         list.add(light);
         return light;
     }

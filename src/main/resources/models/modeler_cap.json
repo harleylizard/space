@@ -1,7 +1,13 @@
 {
   "textures": {
-    "side": "textures/modeler_cap.png",
-    "bottom": "textures/modeler_cap_bottom.png"
+    "side": {
+      "color": "textures/modeler_cap.png",
+      "emissive": "textures/modeler_cap_emissive.png"
+    },
+    "bottom": {
+      "color": "textures/modeler_cap_bottom.png",
+      "emissive": "textures/modeler_cap_bottom_emissive.png"
+    }
   },
   "shapes": [
     {

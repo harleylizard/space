@@ -7,16 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class TextureLookup {
-    private final Map<String, String> map;
+    private final Map<String, TexturePath> map;
 
-    private TextureLookup(Map<String, String> map) {
+    private TextureLookup(Map<String, TexturePath> map) {
         this.map = map;
     }
 
-    public String getPath(String name) {
+    public TexturePath getPath(String name) {
         var result = map.get(name);
-        if (map.containsKey(result)) {
-            return getPath(result);
+        var color = result.getColor();
+        if (map.containsKey(color)) {
+            return map.get(color);
         }
         return result;
     }
@@ -27,10 +28,21 @@ public final class TextureLookup {
 
     public static TextureLookup fromJson(JsonObject jsonObject) {
         var textures = jsonObject.getAsJsonObject("textures");
-        var map = new HashMap<String, String>(textures.size());
+        var map = new HashMap<String, TexturePath>(textures.size());
 
         for (var entry : textures.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().getAsString());
+            TexturePath path;
+            var value = entry.getValue();
+            if (value.isJsonObject()) {
+                var jsonObject1 = value.getAsJsonObject();
+
+                var color = jsonObject1.getAsJsonPrimitive("color").getAsString();
+                var emissive = jsonObject1.getAsJsonPrimitive("emissive").getAsString();
+                path = new TexturePath(color, emissive);
+            } else {
+                path = TexturePath.justColor(value.getAsString());
+            }
+            map.put(entry.getKey(), path);
         }
         return new TextureLookup(Collections.unmodifiableMap(map));
     }

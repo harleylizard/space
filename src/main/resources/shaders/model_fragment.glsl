@@ -13,6 +13,7 @@ in vec3 m_normal;
 uniform sampler2DArray tSampler;
 
 vec3 normalMap = texture(tSampler, vec3(m_uv.x, m_uv.y, m_uv.z + 1)).xyz;
+vec3 emissiveMap = texture(tSampler, vec3(m_uv.x, m_uv.y, m_uv.z + 2)).xyz;
 
 uniform int size;
 
@@ -28,10 +29,10 @@ layout (binding = 0) buffer lightsBuffer {
 vec4 spherical(Light light) {
     vec3 normal = m_normal;
 
-    vec3 magnitude = light.position.xyz - vec3(-m_position.x, m_position.y, -m_position.z);
+    vec3 magnitude = light.position.xyz - vec3(m_position.x, m_position.y, m_position.z);
     vec3 direction = normalize(magnitude);
 
-    vec3 transformed = normalize(normal + (normalMap.rgb * 2.0 - 1.0));
+    vec3 transformed = normalize(normal);
     float intensity = max(dot(transformed, direction), 0.0F) * (10.0F * light.color.w * 1.0F);
 
     float distance = length(magnitude);
@@ -43,12 +44,18 @@ vec4 spherical(Light light) {
 }
 
 void main() {
-    vec4 result = vec4(0.25F);
+    vec4 result = vec4(0.0F);
 
     for(int i = 0; i < size; ++i) {
         result += spherical(lights[i]);
     }
+
     result = vec4(min(result.x, 1.0F), min(result.y, 1.0F), min(result.z, 1.0F), min(result.w, 1.0F));
 
-    color = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F) * result;
+    vec4 pixel = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F);
+    color = pixel * result;
+
+    if (emissiveMap.r > 0) {
+        color = pixel;
+    }
 }

@@ -13,6 +13,7 @@ public final class ModelerBlocks {
     public static final Block MODELER_MUSHROOM = new Block();
     public static final Block MODELER_GLOW = new Block();
     public static final Block MODELER_FLOOR = new Block();
+    public static final Block MODELER_LIGHT = new Block();
 
     public static final Registry<Block> REGISTRY = new Registry.Builder<Block>()
             .register("modeler_air", MODELER_AIR)
@@ -24,6 +25,7 @@ public final class ModelerBlocks {
             .register("modeler_mushroom", MODELER_MUSHROOM)
             .register("modeler_glow", MODELER_GLOW)
             .register("modeler_floor", MODELER_FLOOR)
+            .register("modeler_light", MODELER_LIGHT)
             .build();
 
     private ModelerBlocks() {}

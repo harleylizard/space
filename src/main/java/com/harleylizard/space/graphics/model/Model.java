@@ -10,6 +10,7 @@ import com.harleylizard.space.graphics.shape.Plane;
 import com.harleylizard.space.graphics.shape.Shape;
 import com.harleylizard.space.graphics.texture.TextureLookup;
 import com.harleylizard.space.graphics.vertex.Layer;
+import com.harleylizard.space.math.Color;
 import com.harleylizard.space.math.Direction;
 
 import java.lang.reflect.Type;
@@ -18,14 +19,16 @@ import java.util.*;
 public final class Model implements Iterable<Shape> {
     public static final JsonDeserializer<Model> DESERIALIZER = Model::fromJson;
 
-    private static final Model EMPTY = new Model(List.of(), Layer.SOLID);
+    private static final Model EMPTY = new Model(List.of(), Layer.SOLID, 0);
 
     private final List<Shape> shapes;
     private final Layer layer;
+    private final int light;
 
-    private Model(List<Shape> shapes, Layer layer) {
+    private Model(List<Shape> shapes, Layer layer, int light) {
         this.shapes = shapes;
         this.layer = layer;
+        this.light = light;
     }
 
     public boolean isEmpty() {
@@ -34,6 +37,10 @@ public final class Model implements Iterable<Shape> {
 
     public Layer getLayer() {
         return layer;
+    }
+
+    public int getLight() {
+        return light;
     }
 
     @Override
@@ -51,6 +58,16 @@ public final class Model implements Iterable<Shape> {
             layer = Layer.fromString(jsonObject.getAsJsonPrimitive("layer").getAsString());
         }
 
+        var light = 0;
+        if (jsonObject.has("light")) {
+            var lightArray = jsonObject.getAsJsonArray("light");
+            var r = lightArray.get(0).getAsFloat();
+            var g = lightArray.get(1).getAsFloat();
+            var b = lightArray.get(2).getAsFloat();
+            var a = lightArray.get(3).getAsFloat();
+            light = Color.pack(r, g, b, a);
+        }
+
         var jsonArray = jsonObject.getAsJsonArray("shapes");
         var size = jsonArray.size();
         if (size == 0) {
@@ -61,7 +78,7 @@ public final class Model implements Iterable<Shape> {
         for (JsonElement element : jsonArray) {
             shapes.add(createShape(lookup, element.getAsJsonObject()));
         }
-        return new Model(Collections.unmodifiableList(shapes), layer);
+        return new Model(Collections.unmodifiableList(shapes), layer, light);
     }
 
     private static Shape createShape(TextureLookup lookup, JsonObject jsonObject) {

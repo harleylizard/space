@@ -1,7 +1,11 @@
 {
+  "light": [0.8, 0.2, 0.8, 0.01],
   "layer": "transparent",
   "textures": {
-    "mushroom": "textures/modeler_mushroom.png"
+    "mushroom": {
+      "color": "textures/modeler_mushroom.png",
+      "emissive": "textures/modeler_mushroom_emissive.png"
+    }
   },
   "shapes": [
     {

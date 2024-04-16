@@ -1,7 +1,11 @@
 {
+  "light": [0.7, 0.9, 0.8, 0.25],
   "layer": "transparent",
   "textures": {
-    "glow": "textures/modeler_glow.png"
+    "glow": {
+      "color": "textures/modeler_glow.png",
+      "emissive": "textures/modeler_glow_emissive.png"
+    }
   },
   "shapes": [
     {

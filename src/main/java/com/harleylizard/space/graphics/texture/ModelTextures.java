@@ -35,15 +35,20 @@ public final class ModelTextures {
             var textures = MaterialManager.getInstance().getPaths();
 
             var size = textures.size();
-            glTextureStorage3D(texture, 2, GL_RGBA8, WIDTH, HEIGHT, size * 2);
+            glTextureStorage3D(texture, 2, GL_RGBA8, WIDTH, HEIGHT, size * 3);
 
             var i = 0;
             for (var path : textures) {
-                var image = Resources.readImage(Resources.get(path));
-                var normalMap = NormalMap.from(path);
+                var color = path.getColor();
+                var image = Resources.readImage(Resources.get(color));
+                var normalMap = NormalMap.from(color);
                 loadImage(texture, buffer, image, i);
                 loadImage(texture, buffer, normalMap, i + 1);
-                i += 2;
+                if (path.hasEmissive()) {
+                    var emissive = path.getEmissive();
+                    loadImage(texture, buffer, Resources.readImage(Resources.get(emissive)), i + 2);
+                }
+                i += 3;
             }
             glGenerateTextureMipmap(texture);
             glBindTextureUnit(unit, texture);

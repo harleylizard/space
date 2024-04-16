@@ -2,6 +2,7 @@ package com.harleylizard.space.graphics.modeler;
 
 import com.harleylizard.space.Resources;
 import com.harleylizard.space.block.Block;
+import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.model.ModelReader;
 import com.harleylizard.space.graphics.vertex.Layers;
 import com.harleylizard.space.modeler.ModelerBlocks;
@@ -21,7 +22,7 @@ public final class ModelerBackground {
         this.blocks = blocks;
     }
 
-    public void upload(Layers layers) {
+    public void upload(Layers layers, Lights lights) {
         var stack = new Matrix4fStack(3);
         stack.pushMatrix();
         for (int i = 0; i < blocks.length; i++) {
@@ -39,6 +40,11 @@ public final class ModelerBackground {
             try {
                 var model = ModelReader.getModel(ModelerBlocks.REGISTRY, block);
 
+                var color = model.getLight();
+                if (color != 0) {
+                    var light = lights.add(color);
+                    light.move(x + 0.5F, y + 0.5F, z + 0.5F);
+                }
                 var parameters = layers.getVertexParameter(model.getLayer());
                 for (var shape : model) {
                     shape.build(parameters, stack);

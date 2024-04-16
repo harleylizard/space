@@ -6,7 +6,11 @@ public final class Color {
     private Color() {}
 
     public static int pack(int r, int g, int b, int a) {
-        return ((a & BIT_MASK) << 24) | ((r & BIT_MASK) << 16) | ((g & BIT_MASK) << 8) | (b & BIT_MASK);
+        r &= BIT_MASK;
+        g &= BIT_MASK;
+        b &= BIT_MASK;
+        a &= BIT_MASK;
+        return (a << 24) | (r << 16) | (g << 8) | b;
     }
 
     public static int pack(float r, float g, float b, float a) {

@@ -14,23 +14,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class ModelerTest {
     private static final Registry<Block> REGISTRY = ModelerBlocks.REGISTRY;
 
-    private static final Map<String, String> MAP = Map.of(
-            "minecraft:mycelium", REGISTRY.get(ModelerBlocks.MODELER_GRASS),
-            "minecraft:dirt", REGISTRY.get(ModelerBlocks.MODELER_DIRT),
-            "minecraft:coarse_dirt", REGISTRY.get(ModelerBlocks.MODELER_DIRT),
-            "minecraft:glowstone", REGISTRY.get(ModelerBlocks.MODELER_GLOW),
-            "minecraft:warped_stem", REGISTRY.get(ModelerBlocks.MODELER_STEM),
-            "minecraft:purple_concrete", REGISTRY.get(ModelerBlocks.MODELER_CAP),
-            "minecraft:air", REGISTRY.get(ModelerBlocks.MODELER_AIR),
-            "minecraft:short_grass", REGISTRY.get(ModelerBlocks.MODELER_WILD_GRASS),
-            "minecraft:crimson_fungus", REGISTRY.get(ModelerBlocks.MODELER_MUSHROOM),
-            "minecraft:smooth_stone_slab", REGISTRY.get(ModelerBlocks.MODELER_FLOOR)
-    );
+    private static final Map<String, String> MAP = createMap();
 
     @Test
     public void map() throws IOException {
@@ -77,5 +68,24 @@ public final class ModelerTest {
 
     private int indexOf(int x, int y, int z) {
         return (z * 32 * 32) + (y * 32) + x;
+    }
+
+    private static Map<String, String> createMap() {
+        var map = new HashMap<String, String>();
+        map.put("minecraft:mycelium", REGISTRY.get(ModelerBlocks.MODELER_GRASS));
+        map.put("minecraft:dirt", REGISTRY.get(ModelerBlocks.MODELER_DIRT));
+        map.put("minecraft:coarse_dirt", REGISTRY.get(ModelerBlocks.MODELER_DIRT));
+        map.put("minecraft:glowstone", REGISTRY.get(ModelerBlocks.MODELER_GLOW));
+        map.put("minecraft:warped_stem", REGISTRY.get(ModelerBlocks.MODELER_STEM));
+        map.put("minecraft:purple_concrete", REGISTRY.get(ModelerBlocks.MODELER_CAP));
+        map.put("minecraft:air", REGISTRY.get(ModelerBlocks.MODELER_AIR));
+        map.put("minecraft:short_grass", REGISTRY.get(ModelerBlocks.MODELER_WILD_GRASS));
+        map.put("minecraft:crimson_fungus", REGISTRY.get(ModelerBlocks.MODELER_MUSHROOM));
+        map.put("minecraft:smooth_stone_slab", REGISTRY.get(ModelerBlocks.MODELER_FLOOR));
+        map.put("minecraft:weeping_vines", REGISTRY.get(ModelerBlocks.MODELER_AIR));
+        map.put("minecraft:weeping_vines_plant", REGISTRY.get(ModelerBlocks.MODELER_AIR));
+        map.put("minecraft:sea_lantern", REGISTRY.get(ModelerBlocks.MODELER_LIGHT));
+
+        return Collections.unmodifiableMap(map);
     }
 }

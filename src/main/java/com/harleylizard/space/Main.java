@@ -1,6 +1,8 @@
 package com.harleylizard.space;
 
-import com.harleylizard.space.graphics.*;
+import com.harleylizard.space.graphics.ProgramPipeline;
+import com.harleylizard.space.graphics.Quad;
+import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.modeler.ModelerGraphics;
 import com.harleylizard.space.graphics.texture.ModelTextures;
 import com.harleylizard.space.modeler.Modeler;
@@ -38,8 +40,6 @@ public final class Main {
             ModelTextures.bind(0);
 
             //glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
-
-            var angle = 0.0F;
 
             glEnable(GL_CULL_FACE);
             glEnable(GL_DEPTH_TEST);
