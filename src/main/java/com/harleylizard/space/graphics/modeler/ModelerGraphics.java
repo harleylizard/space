@@ -2,8 +2,11 @@ package com.harleylizard.space.graphics.modeler;
 
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
+import com.harleylizard.space.graphics.UniformBuffer;
 import com.harleylizard.space.graphics.light.Lights;
+import com.harleylizard.space.graphics.vertex.Layers;
 import com.harleylizard.space.modeler.Modeler;
+import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
@@ -27,12 +30,31 @@ public final class ModelerGraphics {
 
     private final Lights lights = new Lights();
 
-    private final ModelerBackground background = ModelerBackground.of("modeler_background.block", lights);
+    private final Layers layers = new Layers();
 
-    public void draw(Modeler modeler) {
+    private final ModelerBackground background = ModelerBackground.of("modeler_background.block");
+
+    private float angle;
+
+    {
+        background.upload(layers);
+        layers.upload();
+        lights.add(1.0F, 1.0F, 1.0F, 1.0F, 1.0F).move(-15.5F, -4.0F, -15.5F);
+    }
+
+    public void draw(Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
+        view.identity();
+        view.translate(0.0F, 0.0F, -7.0F);
+        view.rotate((float) Math.toRadians(angle += 0.25F), 0.0F, 1.0F, 0.0F);
+        view.translate(-15.5F, -4.0F, -15.5F);
+
+        model.identity();
+
+        UniformBuffer.uploadMatrices(projection, view, model);
+
         pipeline.bind();
         uploadLights();
-        background.draw();
+        layers.draw();
         ProgramPipeline.unbind();
     }
 
@@ -51,7 +73,7 @@ public final class ModelerGraphics {
             var g = light.getG();
             var b = light.getB();
             buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F);
-            buffer.putFloat(r).putFloat(g).putFloat(b).putFloat(0.25F);
+            buffer.putFloat(r).putFloat(g).putFloat(b).putFloat(1.0F);
         }
         buffer.position(0);
 

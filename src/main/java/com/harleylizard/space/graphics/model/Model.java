@@ -9,6 +9,7 @@ import com.harleylizard.space.graphics.shape.Face;
 import com.harleylizard.space.graphics.shape.Plane;
 import com.harleylizard.space.graphics.shape.Shape;
 import com.harleylizard.space.graphics.texture.TextureLookup;
+import com.harleylizard.space.graphics.vertex.Layer;
 import com.harleylizard.space.math.Direction;
 
 import java.lang.reflect.Type;
@@ -17,16 +18,22 @@ import java.util.*;
 public final class Model implements Iterable<Shape> {
     public static final JsonDeserializer<Model> DESERIALIZER = Model::fromJson;
 
-    private static final Model EMPTY = new Model(List.of());
+    private static final Model EMPTY = new Model(List.of(), Layer.SOLID);
 
     private final List<Shape> shapes;
+    private final Layer layer;
 
-    private Model(List<Shape> shapes) {
+    private Model(List<Shape> shapes, Layer layer) {
         this.shapes = shapes;
+        this.layer = layer;
     }
 
     public boolean isEmpty() {
         return shapes.isEmpty();
+    }
+
+    public Layer getLayer() {
+        return layer;
     }
 
     @Override
@@ -39,6 +46,11 @@ public final class Model implements Iterable<Shape> {
 
         var lookup = TextureLookup.fromJson(jsonObject);
 
+        var layer = Layer.SOLID;
+        if (jsonObject.has("layer")) {
+            layer = Layer.fromString(jsonObject.getAsJsonPrimitive("layer").getAsString());
+        }
+
         var jsonArray = jsonObject.getAsJsonArray("shapes");
         var size = jsonArray.size();
         if (size == 0) {
@@ -49,7 +61,7 @@ public final class Model implements Iterable<Shape> {
         for (JsonElement element : jsonArray) {
             shapes.add(createShape(lookup, element.getAsJsonObject()));
         }
-        return new Model(Collections.unmodifiableList(shapes));
+        return new Model(Collections.unmodifiableList(shapes), layer);
     }
 
     private static Shape createShape(TextureLookup lookup, JsonObject jsonObject) {
@@ -72,12 +84,24 @@ public final class Model implements Iterable<Shape> {
             case "plane" -> {
                 var from = jsonObject.getAsJsonArray("from");
                 var to = jsonObject.getAsJsonArray("to");
+
+                var x = 0.0F;
+                var y = 0.0F;
+                var z = 0.0F;
+                if (jsonObject.has("rotation")) {
+                    var rotation = jsonObject.getAsJsonArray("rotation");
+                    x = (float) Math.toRadians(rotation.get(0).getAsFloat());
+                    y = (float) Math.toRadians(rotation.get(1).getAsFloat());
+                    z = (float) Math.toRadians(rotation.get(2).getAsFloat());
+                }
+
                 var faces = createPlaneFaces(lookup, jsonObject.getAsJsonObject("face"));
                 return new Plane(
                         from.get(0).getAsFloat() / 16.0F,
                         from.get(1).getAsFloat() / 16.0F,
                         to.get(0).getAsFloat() / 16.0F,
                         to.get(1).getAsFloat() / 16.0F,
+                        x, y, z,
                         faces
                 );
             }
@@ -89,7 +113,7 @@ public final class Model implements Iterable<Shape> {
         var map = new EnumMap<Direction, Face>(Direction.class);
 
         for (var direction : Direction.values()) {
-            var name = direction.getName();
+            var name = direction.stringify();
             if (jsonObject.has(name)) {
                 var jsonObject1 = jsonObject.getAsJsonObject(name);
                 var uv = jsonObject1.getAsJsonArray("uv");

@@ -1,6 +1,6 @@
 package com.harleylizard.space.math;
 
-public enum Direction {
+public enum Direction implements Stringifiable {
     NORTH("north"),
     EAST("east"),
     SOUTH("south"),
@@ -14,7 +14,8 @@ public enum Direction {
         this.name = name;
     }
 
-    public String getName() {
+    @Override
+    public String stringify() {
         return name;
     }
 }

@@ -1,6 +1,5 @@
 package com.harleylizard.space.graphics.shape;
 
-import com.harleylizard.space.graphics.texture.Material;
 import com.harleylizard.space.graphics.vertex.VertexParameters;
 import com.harleylizard.space.math.Direction;
 import org.joml.Matrix4fStack;
@@ -84,10 +83,10 @@ public final class Cube implements Shape {
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
             var material = face.getMaterial();
-            parameters.vertex(stack, toX, toY, fromZ, minU, maxV, material, 0, 1, 0);
-            parameters.vertex(stack, fromX, toY, fromZ, maxU, maxV, material, 0, 1, 0);
-            parameters.vertex(stack, fromX, toY, toZ, maxU, minV, material, 0, 1, 0);
-            parameters.vertex(stack, toX, toY, toZ, minU, minV, material, 0, 1, 0);
+            parameters.vertex(stack, toX, toY, fromZ, minU, maxV, material, 0, -1, 0);
+            parameters.vertex(stack, fromX, toY, fromZ, maxU, maxV, material, 0, -1, 0);
+            parameters.vertex(stack, fromX, toY, toZ, maxU, minV, material, 0, -1, 0);
+            parameters.vertex(stack, toX, toY, toZ, minU, minV, material, 0, -1, 0);
         }
         if (faces.containsKey(Direction.DOWN)) {
             var face = faces.get(Direction.DOWN);
@@ -96,10 +95,10 @@ public final class Cube implements Shape {
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
             var material = face.getMaterial();
-            parameters.vertex(stack, fromX, fromY, fromZ, minU, maxV, material, 0, -1, 0);
-            parameters.vertex(stack, toX, fromY, fromZ, maxU, maxV, material, 0, -1, 0);
-            parameters.vertex(stack, toX, fromY, toZ, maxU, minV, material, 0, -1, 0);
-            parameters.vertex(stack, fromX, fromY, toZ, minU, minV, material, 0, -1, 0);
+            parameters.vertex(stack, fromX, fromY, fromZ, minU, maxV, material, 0, 1, 0);
+            parameters.vertex(stack, toX, fromY, fromZ, maxU, maxV, material, 0, 1, 0);
+            parameters.vertex(stack, toX, fromY, toZ, maxU, minV, material, 0, 1, 0);
+            parameters.vertex(stack, fromX, fromY, toZ, minU, minV, material, 0, 1, 0);
         }
     }
 }

@@ -4,13 +4,17 @@ import com.harleylizard.space.math.Color;
 
 public final class Light {
     private final int color;
+    private final float range;
+    private final float intensity;
 
     private float x;
     private float y;
     private float z;
 
-    private Light(int color) {
+    private Light(int color, float range, float intensity) {
         this.color = color;
+        this.range = range;
+        this.intensity = intensity;
     }
 
     public void move(float x, float y, float z) {
@@ -32,18 +36,26 @@ public final class Light {
     }
 
     public float getR() {
-        return 1.0F;
+        return ((color >> 16) & 0xFF) / 255.0F;
     }
 
     public float getG() {
-        return 1.0F;
+        return ((color >> 8) & 0xFF) / 255.0F;
     }
 
     public float getB() {
-        return 1.0F;
+        return (color & 0xFF) / 255.0F;
     }
 
-    public static Light of(float r, float g, float b) {
-        return new Light(Color.pack(r, g, b, 1.0F));
+    public float getRange() {
+        return range;
+    }
+
+    public float getIntensity() {
+        return intensity;
+    }
+
+    public static Light of(float r, float g, float b, float range, float intensity) {
+        return new Light(Color.pack(r, g, b, 1.0F), range, intensity);
     }
 }
