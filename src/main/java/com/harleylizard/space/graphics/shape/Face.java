@@ -1,23 +1,20 @@
 package com.harleylizard.space.graphics.shape;
 
-import com.harleylizard.space.graphics.texture.Material;
-
 public final class Face {
     private final int texture;
     private final float minU;
     private final float minV;
     private final float maxU;
     private final float maxV;
+    private final int t;
 
-    private final Material material;
-
-    public Face(int texture, float minU, float minV, float maxU, float maxV, Material material) {
+    public Face(int texture, float minU, float minV, float maxU, float maxV, int t) {
         this.texture = texture;
         this.minU = minU;
         this.minV = minV;
         this.maxU = maxU;
         this.maxV = maxV;
-        this.material = material;
+        this.t = t;
     }
 
     public int getTexture() {
@@ -40,7 +37,7 @@ public final class Face {
         return maxV;
     }
 
-    public Material getMaterial() {
-        return material;
+    public int getT() {
+        return t;
     }
 }

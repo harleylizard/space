@@ -1,6 +1,5 @@
 {
   "ambient": true,
-  "light": [0.9, 0.2, 0.9, 0.0075],
   "layer": "transparent",
   "textures": {
     "mushroom": {

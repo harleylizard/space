@@ -117,13 +117,13 @@ public final class ModelDeserializer {
                 var uv = jsonObject1.getAsJsonArray("uv");
 
                 var texture = jsonObject1.getAsJsonPrimitive("texture").getAsString();
-                var material = lookup.getMaterial(texture);
+                var t = lookup.getTexture(texture);
 
                 map.put(direction, new Face(0,
                         uv.get(0).getAsFloat() / 16.0F,
                         uv.get(1).getAsFloat() / 16.0F,
                         uv.get(2).getAsFloat() / 16.0F,
-                        uv.get(3).getAsFloat() / 16.0F, material));
+                        uv.get(3).getAsFloat() / 16.0F, t));
             }
         }
         return Collections.unmodifiableMap(map);
@@ -139,13 +139,13 @@ public final class ModelDeserializer {
                 var uv = jsonObject1.getAsJsonArray("uv");
 
                 var texture = jsonObject1.getAsJsonPrimitive("texture").getAsString();
-                var material = lookup.getMaterial(texture);
+                var t = lookup.getTexture(texture);
 
                 map.put(direction, new Face(0,
                         uv.get(0).getAsFloat() / 16.0F,
                         uv.get(1).getAsFloat() / 16.0F,
                         uv.get(2).getAsFloat() / 16.0F,
-                        uv.get(3).getAsFloat() / 16.0F, material));
+                        uv.get(3).getAsFloat() / 16.0F, t));
             }
         }
         return Collections.unmodifiableMap(map);

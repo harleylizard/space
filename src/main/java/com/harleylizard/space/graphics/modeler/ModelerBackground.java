@@ -2,6 +2,8 @@ package com.harleylizard.space.graphics.modeler;
 
 import com.harleylizard.space.Resources;
 import com.harleylizard.space.block.Block;
+import com.harleylizard.space.graphics.light.Light;
+import com.harleylizard.space.graphics.light.LightSignedDistanceField;
 import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.model.ModelReader;
 import com.harleylizard.space.graphics.vertex.CullGetter;
@@ -26,21 +28,23 @@ public final class ModelerBackground implements CullGetter {
     }
 
     public void upload(Layers layers, Lights lights) {
-        var stack = new Matrix4fStack(3);
-        stack.pushMatrix();
-        for (int i = 0; i < blocks.length; i++) {
-            var block = palette.get(blocks[i]);
-            if (block == ModelerBlocks.MODELER_AIR) {
-                continue;
-            }
+        try {
+            var stack = new Matrix4fStack(3);
+            stack.pushMatrix();
 
-            var x = i % 32;
-            var y = (i / 32) % 32;
-            var z = i / (32 * 32);
-            stack.identity();
-            stack.translate(x, y, z);
+            var size = blocks.length;
+            for (var i = 0; i < size; i++) {
+                var block = palette.get(blocks[i]);
+                if (block == ModelerBlocks.MODELER_AIR) {
+                    continue;
+                }
 
-            try {
+                var x = i % 32;
+                var y = (i / 32) % 32;
+                var z = i / (32 * 32);
+                stack.identity();
+                stack.translate(x, y, z);
+
                 var model = ModelReader.getModel(ModelerBlocks.REGISTRY, block);
 
                 var color = model.getLight();
@@ -48,15 +52,34 @@ public final class ModelerBackground implements CullGetter {
                     var light = lights.add(color);
                     light.move(x + 0.5F, y + 0.5F, z + 0.5F);
                 }
-                var parameters = layers.getVertexParameter(model.getLayer());
-                for (var shape : model) {
-                    shape.build(this, parameters, stack, x, y, z, model.isAmbient());
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+
+            var sdf = LightSignedDistanceField.createFrom(lights);
+            for (var i = 0; i < size; i++) {
+                var block = palette.get(blocks[i]);
+                if (block == ModelerBlocks.MODELER_AIR) {
+                    continue;
+                }
+
+                var x = i % 32;
+                var y = (i / 32) % 32;
+                var z = i / (32 * 32);
+                stack.identity();
+                stack.translate(x, y, z);
+
+                var model = ModelReader.getModel(ModelerBlocks.REGISTRY, block);
+
+                var parameters = layers.getVertexParameter(model.getLayer());
+
+                var j = sdf.getLight(x, y, z);
+                for (var shape : model) {
+                    shape.build(this, parameters, stack, x, y, z, model.isAmbient(), j);
+                }
+            }
+            stack.popMatrix();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        stack.popMatrix();
     }
 
     @Override

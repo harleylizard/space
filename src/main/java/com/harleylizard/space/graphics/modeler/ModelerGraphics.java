@@ -4,6 +4,7 @@ import com.harleylizard.space.Player;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
+import com.harleylizard.space.graphics.light.LightSignedDistanceField;
 import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.vertex.Layers;
 import com.harleylizard.space.modeler.Modeler;
@@ -36,13 +37,10 @@ public final class ModelerGraphics {
 
     private final ModelerBackground background = ModelerBackground.of("modeler_background.block");
 
-    private float angle;
-
     {
+        lights.add(1.0F, 0.0F, 0.0F, 0.125F).move(15.5F, 3.0F, 15.5F);
         background.upload(layers, lights);
         layers.upload();
-
-        lights.add(1.0F, 1.0F, 1.0F, 0.125F).move(15.5F, 4.0F, 15.5F);
     }
 
     public void draw(Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
@@ -60,7 +58,6 @@ public final class ModelerGraphics {
         pipeline.bind();
         uploadLights();
         layers.draw();
-        ProgramPipeline.unbind();
     }
 
     private void uploadLights() {

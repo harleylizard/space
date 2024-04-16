@@ -9,6 +9,7 @@ out vec4 color;
 in vec4 m_position;
 in vec3 m_uv;
 in vec3 m_normal;
+in vec4 m_lightMap;
 
 uniform sampler2DArray tSampler;
 
@@ -27,51 +28,36 @@ layout (binding = 0) buffer lightsBuffer {
 };
 
 vec4 spherical(Light light) {
-    vec3 normal = m_normal;
-
     vec3 magnitude = light.position.xyz - m_position.xyz;
 
     float distance = length(magnitude);
     float attenuation = 1.0F / ((constant + linear) * distance + quadratic * distance * distance);
 
-    vec3 transformed = normalize(normal);
+    vec3 transformed = normalize(m_normal);
 
-    float direction = dot(normalize(normal), normalize(magnitude));
+    float direction = dot(transformed, normalize(magnitude));
     float intensity = max(direction, 0.0F) * (10.0F * light.color.w);
-
-    return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
-}
-
-vec4 sphericalAmbient(Light light) {
-    vec3 magnitude = light.position.xyz - m_position.xyz;
-
-    float distance = length(magnitude);
-    float attenuation = 1.0F / ((constant + linear) * distance + quadratic * distance * distance);
-
-    vec3 direction = normalize(magnitude);
-    float intensity = max(direction.r, 0.0F) * (10.0F * light.color.w);
 
     return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
 }
 
 void main() {
     vec4 result = vec4(0.0F);
-    vec4 ambient = vec4(0.0F);
 
     for(int i = 0; i < size; ++i) {
         Light light = lights[i];
         result += spherical(light);
-        ambient += sphericalAmbient(light);
     }
-
     result = vec4(min(result.x, 1.0F), min(result.y, 1.0F), min(result.z, 1.0F), min(result.w, 1.0F));
-    ambient = vec4(min(ambient.x, 1.0F), min(ambient.y, 1.0F), min(ambient.z, 1.0F), min(ambient.w, 1.0F));
 
     vec4 pixel = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F);
-    color = pixel * result;
+
+    vec4 added = vec4(result.rgb * 3.0F + m_lightMap.rgb, 1.0F);
+    vec4 clamped = vec4(min(added.r, 1.0F), min(added.g, 1.0F), min(added.b, 1.0F), min(added.a, 1.0F));
+    color = pixel * clamped * result;
 
     if (m_normal.xyz == 0) {
-        color = pixel * ambient;
+        color = pixel * m_lightMap;
     }
     if (emissiveMap.r > 0) {
         color = pixel;

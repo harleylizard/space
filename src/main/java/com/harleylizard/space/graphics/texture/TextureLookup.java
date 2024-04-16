@@ -22,8 +22,8 @@ public final class TextureLookup {
         return result;
     }
 
-    public Material getMaterial(String name) {
-        return !map.containsKey(name) ? Material.getEmpty() : MaterialManager.getInstance().getMaterial(getPath(name));
+    public int getTexture(String name) {
+        return !map.containsKey(name) ? 0 : TextureManager.getInstance().getTexture(getPath(name));
     }
 
     public static TextureLookup fromJson(JsonObject jsonObject) {

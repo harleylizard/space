@@ -43,9 +43,11 @@ public final class Layers {
             glVertexArrayAttribBinding(vao, 0, 0);
             glVertexArrayAttribBinding(vao, 1, 0);
             glVertexArrayAttribBinding(vao, 2, 0);
+            glVertexArrayAttribBinding(vao, 3, 0);
             glVertexArrayAttribFormat(vao, 0, 4, GL_FLOAT, false, 0);
             glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, false, 16);
             glVertexArrayAttribFormat(vao, 2, 3, GL_FLOAT, false, 28);
+            glVertexArrayAttribFormat(vao, 3, 4, GL_FLOAT, false, 40);
 
             glVertexArrayElementBuffer(vao, ebo);
 
@@ -65,12 +67,14 @@ public final class Layers {
             glEnableVertexArrayAttrib(vao, 0);
             glEnableVertexArrayAttrib(vao, 1);
             glEnableVertexArrayAttrib(vao, 2);
+            glEnableVertexArrayAttrib(vao, 3);
 
             glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
 
             glDisableVertexArrayAttrib(vao, 0);
             glDisableVertexArrayAttrib(vao, 1);
             glDisableVertexArrayAttrib(vao, 2);
+            glDisableVertexArrayAttrib(vao, 3);
 
             glBindVertexArray(0);
         }

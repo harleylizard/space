@@ -6,8 +6,6 @@ import org.lwjgl.system.MemoryStack;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
@@ -32,7 +30,7 @@ public final class ModelTextures {
             glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
             glTextureParameteri(texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-            var textures = MaterialManager.getInstance().getPaths();
+            var textures = TextureManager.getInstance().getPaths();
 
             var size = textures.size();
             glTextureStorage3D(texture, 2, GL_RGBA8, WIDTH, HEIGHT, size * 3);

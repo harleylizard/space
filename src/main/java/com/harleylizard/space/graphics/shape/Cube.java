@@ -28,18 +28,18 @@ public final class Cube implements Shape {
     }
 
     @Override
-    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z, boolean ambient) {
+    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z, boolean ambient, int i) {
         if (hasFace(cullGetter, Direction.NORTH, x, y, z)) {
             var face = faces.get(Direction.NORTH);
             var minU = face.getMinU();
             var minV = face.getMinV();
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
-            var material = face.getMaterial();
-            parameters.vertex(stack, toX, fromY, fromZ, minU, maxV, material, 0, 0, -1);
-            parameters.vertex(stack, fromX, fromY, fromZ, maxU, maxV, material, 0, 0, -1);
-            parameters.vertex(stack, fromX, toY, fromZ, maxU, minV, material, 0, 0, -1);
-            parameters.vertex(stack, toX, toY, fromZ, minU, minV, material, 0, 0, -1);
+            var t = face.getT();
+            parameters.vertex(stack, toX, fromY, fromZ, minU, maxV, t, 0, 0, -1, i);
+            parameters.vertex(stack, fromX, fromY, fromZ, maxU, maxV, t, 0, 0, -1, i);
+            parameters.vertex(stack, fromX, toY, fromZ, maxU, minV, t, 0, 0, -1, i);
+            parameters.vertex(stack, toX, toY, fromZ, minU, minV, t, 0, 0, -1, i);
         }
         if (hasFace(cullGetter, Direction.EAST, x, y, z)) {
             var face = faces.get(Direction.EAST);
@@ -47,11 +47,11 @@ public final class Cube implements Shape {
             var minV = face.getMinV();
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
-            var material = face.getMaterial();
-            parameters.vertex(stack, toX, fromY, toZ, minU, maxV, material, 1, 0, 0);
-            parameters.vertex(stack, toX, fromY, fromZ, maxU, maxV, material, 1, 0, 0);
-            parameters.vertex(stack, toX, toY, fromZ, maxU, minV, material, 1, 0, 0);
-            parameters.vertex(stack, toX, toY, toZ, minU, minV, material, 1, 0, 0);
+            var t = face.getT();
+            parameters.vertex(stack, toX, fromY, toZ, minU, maxV, t, 1, 0, 0, i);
+            parameters.vertex(stack, toX, fromY, fromZ, maxU, maxV, t, 1, 0, 0, i);
+            parameters.vertex(stack, toX, toY, fromZ, maxU, minV, t, 1, 0, 0, i);
+            parameters.vertex(stack, toX, toY, toZ, minU, minV, t, 1, 0, 0, i);
         }
         if (hasFace(cullGetter, Direction.SOUTH, x, y, z)) {
             var face = faces.get(Direction.SOUTH);
@@ -59,11 +59,11 @@ public final class Cube implements Shape {
             var minV = face.getMinV();
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
-            var material = face.getMaterial();
-            parameters.vertex(stack, fromX, fromY, toZ, minU, maxV, material, 0, 0, 1);
-            parameters.vertex(stack, toX, fromY, toZ, maxU, maxV, material, 0, 0, 1);
-            parameters.vertex(stack, toX, toY, toZ, maxU, minV, material, 0, 0, 1);
-            parameters.vertex(stack, fromX, toY, toZ, minU, minV, material, 0, 0, 1);
+            var t = face.getT();
+            parameters.vertex(stack, fromX, fromY, toZ, minU, maxV, t, 0, 0, 1, i);
+            parameters.vertex(stack, toX, fromY, toZ, maxU, maxV, t, 0, 0, 1, i);
+            parameters.vertex(stack, toX, toY, toZ, maxU, minV, t, 0, 0, 1, i);
+            parameters.vertex(stack, fromX, toY, toZ, minU, minV, t, 0, 0, 1, i);
         }
         if (hasFace(cullGetter, Direction.WEST, x, y, z)) {
             var face = faces.get(Direction.WEST);
@@ -71,11 +71,11 @@ public final class Cube implements Shape {
             var minV = face.getMinV();
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
-            var material = face.getMaterial();
-            parameters.vertex(stack, fromX, fromY, fromZ, minU, maxV, material, -1, 0, 0);
-            parameters.vertex(stack, fromX, fromY, toZ, maxU, maxV, material, -1, 0, 0);
-            parameters.vertex(stack, fromX, toY, toZ, maxU, minV, material, -1, 0, 0);
-            parameters.vertex(stack, fromX, toY, fromZ, minU, minV, material, -1, 0, 0);
+            var t = face.getT();
+            parameters.vertex(stack, fromX, fromY, fromZ, minU, maxV, t, -1, 0, 0, i);
+            parameters.vertex(stack, fromX, fromY, toZ, maxU, maxV, t, -1, 0, 0, i);
+            parameters.vertex(stack, fromX, toY, toZ, maxU, minV, t, -1, 0, 0, i);
+            parameters.vertex(stack, fromX, toY, fromZ, minU, minV, t, -1, 0, 0, i);
         }
         if (hasFace(cullGetter, Direction.UP, x, y, z)) {
             var face = faces.get(Direction.UP);
@@ -83,11 +83,11 @@ public final class Cube implements Shape {
             var minV = face.getMinV();
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
-            var material = face.getMaterial();
-            parameters.vertex(stack, toX, toY, fromZ, minU, maxV, material, 0, 1, 0);
-            parameters.vertex(stack, fromX, toY, fromZ, maxU, maxV, material, 0, 1, 0);
-            parameters.vertex(stack, fromX, toY, toZ, maxU, minV, material, 0, 1, 0);
-            parameters.vertex(stack, toX, toY, toZ, minU, minV, material, 0, 1, 0);
+            var t = face.getT();
+            parameters.vertex(stack, toX, toY, fromZ, minU, maxV, t, 0, 1, 0, i);
+            parameters.vertex(stack, fromX, toY, fromZ, maxU, maxV, t, 0, 1, 0, i);
+            parameters.vertex(stack, fromX, toY, toZ, maxU, minV, t, 0, 1, 0, i);
+            parameters.vertex(stack, toX, toY, toZ, minU, minV, t, 0, 1, 0, i);
         }
         if (hasFace(cullGetter, Direction.DOWN, x, y, z)) {
             var face = faces.get(Direction.DOWN);
@@ -95,11 +95,11 @@ public final class Cube implements Shape {
             var minV = face.getMinV();
             var maxU = face.getMaxU();
             var maxV = face.getMaxV();
-            var material = face.getMaterial();
-            parameters.vertex(stack, fromX, fromY, fromZ, minU, maxV, material, 0, -1, 0);
-            parameters.vertex(stack, toX, fromY, fromZ, maxU, maxV, material, 0, -1, 0);
-            parameters.vertex(stack, toX, fromY, toZ, maxU, minV, material, 0, -1, 0);
-            parameters.vertex(stack, fromX, fromY, toZ, minU, minV, material, 0, -1, 0);
+            var t = face.getT();
+            parameters.vertex(stack, fromX, fromY, fromZ, minU, maxV, t, 0, -1, 0, i);
+            parameters.vertex(stack, toX, fromY, fromZ, maxU, maxV, t, 0, -1, 0, i);
+            parameters.vertex(stack, toX, fromY, toZ, maxU, minV, t, 0, -1, 0, i);
+            parameters.vertex(stack, fromX, fromY, toZ, minU, minV, t, 0, -1, 0, i);
         }
     }
 

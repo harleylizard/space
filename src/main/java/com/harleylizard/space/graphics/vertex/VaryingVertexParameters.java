@@ -1,6 +1,5 @@
 package com.harleylizard.space.graphics.vertex;
 
-import com.harleylizard.space.graphics.texture.Material;
 import com.harleylizard.space.math.ImmutableVector3i;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -10,7 +9,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public final class VaryingVertexParameters implements VertexParameters {
-    public static final int VERTEX_SIZE = 10 * 4;
+    public static final int VERTEX_SIZE = 14 * 4;
 
     private static final int AMOUNT = VERTEX_SIZE * 4;
 
@@ -21,20 +20,25 @@ public final class VaryingVertexParameters implements VertexParameters {
     private VaryingVertexParameters() {}
 
     @Override
-    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, Material material, float nx, float ny, float nz) {
+    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, float nx, float ny, float nz, int i) {
         var vec4f = matrix4f.transform(x, y, z, 1.0F, new Vector4f());
 
+        var r = (float) ((i >> 16) & 0xFF) / 255.0F;
+        var g = (float) ((i >> 8) & 0xFF) / 255.0F;
+        var b = (float) ((i >> 0) & 0xFF) / 255.0F;
+        var a = 1.0F;
         grow(VERTEX_SIZE);
         buffer
                 .putFloat(vec4f.x).putFloat(vec4f.y).putFloat(vec4f.z).putFloat(1.0F)
-                .putFloat(u).putFloat(v).putFloat(material.getTexture())
-                .putFloat(nx).putFloat(ny).putFloat(nz);
+                .putFloat(u).putFloat(v).putFloat(t)
+                .putFloat(nx).putFloat(ny).putFloat(nz)
+                .putFloat(r).putFloat(g).putFloat(b).putFloat(a);
         vertices += VERTEX_SIZE;
     }
 
     @Override
-    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, Material material, ImmutableVector3i normal) {
-        vertex(matrix4f, x, y, z, u, v, material, normal.getX(), normal.getY(), normal.getZ());
+    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, ImmutableVector3i normal, int i) {
+        vertex(matrix4f, x, y, z, u, v, t, normal.getX(), normal.getY(), normal.getZ(), i);
     }
 
     @Override

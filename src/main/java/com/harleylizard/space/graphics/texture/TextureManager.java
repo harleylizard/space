@@ -1,16 +1,19 @@
 package com.harleylizard.space.graphics.texture;
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+
 import java.util.*;
 
-public final class MaterialManager {
-    private static final MaterialManager INSTANCE = new MaterialManager();
+public final class TextureManager {
+    private static final TextureManager INSTANCE = new TextureManager();
 
     private final List<TexturePath> paths = new ArrayList<>();
-    private final Map<TexturePath, Material> map = new HashMap<>();
+    private final Object2IntMap<TexturePath> map = new Object2IntArrayMap<>();
 
-    private MaterialManager() {}
+    private TextureManager() {}
 
-    public Material getMaterial(TexturePath path) {
+    public int getTexture(TexturePath path) {
         if (map.containsKey(path)) {
             return map.get(path);
         }
@@ -19,16 +22,15 @@ public final class MaterialManager {
         }
         var indexOf = 3 * paths.indexOf(path);
 
-        var material = new Material(indexOf, indexOf + 1, indexOf + 2);
-        map.put(path, material);
-        return material;
+        map.put(path, indexOf);
+        return indexOf;
     }
 
     public List<TexturePath> getPaths() {
         return Collections.unmodifiableList(paths);
     }
 
-    public static MaterialManager getInstance() {
+    public static TextureManager getInstance() {
         return INSTANCE;
     }
 }
