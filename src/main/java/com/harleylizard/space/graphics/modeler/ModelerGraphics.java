@@ -1,5 +1,6 @@
 package com.harleylizard.space.graphics.modeler;
 
+import com.harleylizard.space.Player;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
@@ -7,6 +8,7 @@ import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.vertex.Layers;
 import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
@@ -43,11 +45,13 @@ public final class ModelerGraphics {
         lights.add(1.0F, 1.0F, 1.0F, 0.125F).move(15.5F, 4.0F, 15.5F);
     }
 
-    public void draw(Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
+    public void draw(Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
         view.identity();
-        view.translate(0.0F, 0.0F, -7.0F);
-        view.rotate((float) Math.toRadians(angle += 0.25F), 0.0F, 1.0F, 0.0F);
+        view.rotate(player.getRotation());
         view.translate(-15.5F, -4.0F, -15.5F);
+
+        var position = player.getPosition();
+        view.translate(-position.x, -position.y, -position.z);
 
         model.identity();
 

@@ -1,5 +1,7 @@
 package com.harleylizard.space;
 
+import com.harleylizard.space.input.Keyboard;
+import com.harleylizard.space.input.Mouse;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
@@ -22,6 +24,8 @@ public final class Window {
         glfwWindowHint(GLFW_CONTEXT_RELEASE_BEHAVIOR, GLFW_RELEASE_BEHAVIOR_FLUSH);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
+
+        glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_TRUE);
 
         if ((window = glfwCreateWindow(854, 480, "Space", NULL, NULL)) == NULL) {
             glfwTerminate();
@@ -69,6 +73,15 @@ public final class Window {
     public void destroy() {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
+    }
+
+    public void setInput(Keyboard keyboard, Mouse mouse) {
+        glfwSetKeyCallback(window, keyboard::keyCallback);
+        glfwSetCursorPosCallback(window, mouse::cursorPosCallback);
+        glfwSetMouseButtonCallback(window, mouse::buttonCallback);
+        glfwSetCursorEnterCallback(window, (window1, focused) -> {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        });
     }
 
     public float getAspectRatio() {

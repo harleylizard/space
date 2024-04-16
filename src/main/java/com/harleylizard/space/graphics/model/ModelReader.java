@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class ModelReader {
-    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Model.class, Model.DESERIALIZER).create();
+    private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Model.class, ModelDeserializer.JSON_DESERIALIZER).create();
 
     private static final Map<String, Model> MAP = new HashMap<>();
 

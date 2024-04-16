@@ -3,7 +3,6 @@ package com.harleylizard.space.graphics.modeler;
 import com.harleylizard.space.Resources;
 import com.harleylizard.space.block.Block;
 import com.harleylizard.space.graphics.light.Lights;
-import com.harleylizard.space.graphics.model.Model;
 import com.harleylizard.space.graphics.model.ModelReader;
 import com.harleylizard.space.graphics.vertex.CullGetter;
 import com.harleylizard.space.graphics.vertex.Layer;
