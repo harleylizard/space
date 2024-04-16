@@ -1,5 +1,6 @@
 package com.harleylizard.space.graphics.shape;
 
+import com.harleylizard.space.graphics.vertex.CullGetter;
 import com.harleylizard.space.graphics.vertex.VertexParameters;
 import org.joml.Matrix4fStack;
 
@@ -28,12 +29,12 @@ public final class Plane implements Shape {
     }
 
     @Override
-    public void build(VertexParameters parameters, Matrix4fStack stack) {
+    public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z) {
         stack.pushMatrix();
         stack.translate(0.5F, 0.5F, 0.5F);
-        stack.rotate(x, 1.0F, 0.0F, 0.0F);
-        stack.rotate(y, 0.0F, 1.0F, 0.0F);
-        stack.rotate(z, 0.0F, 0.0F, 1.0F);
+        stack.rotate(this.x, 1.0F, 0.0F, 0.0F);
+        stack.rotate(this.y, 0.0F, 1.0F, 0.0F);
+        stack.rotate(this.z, 0.0F, 0.0F, 1.0F);
         stack.translate(-0.5F, -0.5F, -0.5F);
 
         if (faces.containsKey(Direction.FRONT)) {
