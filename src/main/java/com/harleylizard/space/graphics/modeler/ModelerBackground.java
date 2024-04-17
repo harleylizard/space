@@ -71,7 +71,7 @@ public final class ModelerBackground implements CullGetter {
 
                 var parameters = layers.getVertexParameter(model.getLayer());
 
-                var j = sdf.getLight(x, y, z);
+                var j = sdf.getLight(lights, x, y, z);
                 for (var shape : model) {
                     shape.build(this, parameters, stack, x, y, z, model.isAmbient(), j);
                 }

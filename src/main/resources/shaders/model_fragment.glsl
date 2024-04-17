@@ -4,6 +4,12 @@ const float constant = 1.0F;
 const float linear = 0.09F;
 const float quadratic = 0.032F;
 
+const mat3 ditherMatrix = mat3(
+    vec3(0.0F, 0.5F, 0.125F),
+    vec3(0.625F, 0.25F, 0.875F),
+    vec3(0.1875F, 0.6875F, 0.3125F)
+);
+
 out vec4 color;
 
 in vec4 m_position;
@@ -41,20 +47,45 @@ vec4 spherical(Light light) {
     return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
 }
 
+vec4 minVec4(vec4 l, float x, float y, float z, float a) {
+    return vec4(min(l.x, x), min(l.y, y), min(l.z, z), min(l.a, a));
+}
+
+vec4 minVec4(vec4 l, vec4 r) {
+    return minVec4(l, r.x, r.y, r.z, r.w);
+}
+
+vec4 ditherColor(vec4 color) {
+    float grayscale = dot(color.rgb, vec3(0.299F, 0.587F, 0.114F));
+
+    vec2 size = vec2(gl_FragCoord.x, gl_FragCoord.y) * 0.5F;
+    vec3 offset = vec3(
+        ditherMatrix[int(mod(size.y, 3.0F))][int(mod(size.x, 3.0F))],
+        ditherMatrix[int(mod(size.y + 1.0F, 3.0F))][int(mod(size.x + 1.0F, 3.0F))],
+        ditherMatrix[int(mod(size.y + 2.0F, 3.0F))][int(mod(size.x + 2.0F, 3.0F))]
+    ) * grayscale;
+
+    vec3 ditheredColor = color.rgb + (offset * (grayscale - 0.5F));
+    return vec4(ditheredColor, 1.0F);
+}
+
 void main() {
+    vec4 pixel = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F);
+    if (pixel.a == 0) {
+        discard;
+    }
     vec4 result = vec4(0.0F);
 
     for(int i = 0; i < size; ++i) {
-        Light light = lights[i];
-        result += spherical(light);
+        result += spherical(lights[i]);
     }
-    result = vec4(min(result.x, 1.0F), min(result.y, 1.0F), min(result.z, 1.0F), min(result.w, 1.0F));
+    result = minVec4(result, m_lightMap * 0.75F);
 
-    vec4 pixel = texture(tSampler, vec3(m_uv)) * vec4(1.0F, 1.0F, 1.0F, 1.0F);
+    float brightness = 32.0F;
+    vec4 sdf = minVec4(vec4(result.rgb * brightness + m_lightMap.rgb, 1.0F), 1.0F, 1.0F, 1.0F, 1.0F);
 
-    vec4 added = vec4(result.rgb * 3.0F + m_lightMap.rgb, 1.0F);
-    vec4 clamped = vec4(min(added.r, 1.0F), min(added.g, 1.0F), min(added.b, 1.0F), min(added.a, 1.0F));
-    color = pixel * clamped * result;
+    vec4 dithered = ditherColor(pixel * result * sdf);
+    color = dithered;
 
     if (m_normal.xyz == 0) {
         color = pixel * m_lightMap;
