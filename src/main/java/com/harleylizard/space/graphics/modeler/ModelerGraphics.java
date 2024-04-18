@@ -4,12 +4,11 @@ import com.harleylizard.space.Player;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
-import com.harleylizard.space.graphics.light.LightSignedDistanceField;
-import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.vertex.Layers;
+import com.harleylizard.space.light.Light;
+import com.harleylizard.space.light.LightSDF;
 import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
@@ -31,15 +30,17 @@ public final class ModelerGraphics {
 
     private final int lightsBuffer = pipeline.getBuffer("lightsBuffer");
 
-    private final Lights lights = new Lights();
+    private final LightSDF sdf = new LightSDF();
 
     private final Layers layers = new Layers();
 
     private final ModelerBackground background = ModelerBackground.of("modeler_background.block");
 
     {
-        lights.add(1.0F, 0.0F, 0.0F, 0.125F).move(15.5F, 3.0F, 15.5F);
-        background.upload(layers, lights);
+        var light = Light.of(1.0F, 1.0F, 1.0F, 1.125F);
+        light.move(15.5F, 3.0F, 15.5F);
+        sdf.add(light);
+        background.upload(layers, sdf);
         layers.upload();
     }
 
@@ -61,12 +62,12 @@ public final class ModelerGraphics {
     }
 
     private void uploadLights() {
-        var size = lights.size();
+        var size = sdf.getSize();
         glProgramUniform1i(fragment, sizeLocation, size);
 
         var buffer = memCalloc((8 * 4) * size);
 
-        for (var light : lights) {
+        for (var light : sdf) {
             var x = light.getX();
             var y = light.getY();
             var z = light.getZ();

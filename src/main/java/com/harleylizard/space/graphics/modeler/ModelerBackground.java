@@ -2,13 +2,12 @@ package com.harleylizard.space.graphics.modeler;
 
 import com.harleylizard.space.Resources;
 import com.harleylizard.space.block.Block;
-import com.harleylizard.space.graphics.light.Light;
-import com.harleylizard.space.graphics.light.LightSignedDistanceField;
-import com.harleylizard.space.graphics.light.Lights;
 import com.harleylizard.space.graphics.model.ModelReader;
 import com.harleylizard.space.graphics.vertex.CullGetter;
 import com.harleylizard.space.graphics.vertex.Layer;
 import com.harleylizard.space.graphics.vertex.Layers;
+import com.harleylizard.space.light.Light;
+import com.harleylizard.space.light.LightSDF;
 import com.harleylizard.space.math.Direction;
 import com.harleylizard.space.modeler.ModelerBlocks;
 import org.joml.Matrix4fStack;
@@ -27,7 +26,7 @@ public final class ModelerBackground implements CullGetter {
         this.blocks = blocks;
     }
 
-    public void upload(Layers layers, Lights lights) {
+    public void upload(Layers layers, LightSDF sdf) {
         try {
             var stack = new Matrix4fStack(3);
             stack.pushMatrix();
@@ -49,12 +48,12 @@ public final class ModelerBackground implements CullGetter {
 
                 var color = model.getLight();
                 if (color != 0) {
-                    var light = lights.add(color);
+                    var light = Light.of(color);
                     light.move(x + 0.5F, y + 0.5F, z + 0.5F);
+                    sdf.add(light);
                 }
             }
 
-            var sdf = LightSignedDistanceField.createFrom(lights);
             for (var i = 0; i < size; i++) {
                 var block = palette.get(blocks[i]);
                 if (block == ModelerBlocks.MODELER_AIR) {
@@ -71,7 +70,7 @@ public final class ModelerBackground implements CullGetter {
 
                 var parameters = layers.getVertexParameter(model.getLayer());
 
-                var j = sdf.getLight(lights, x, y, z);
+                var j = sdf.getColor(x, y, z);
                 for (var shape : model) {
                     shape.build(this, parameters, stack, x, y, z, model.isAmbient(), j);
                 }

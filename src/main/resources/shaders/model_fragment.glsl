@@ -4,10 +4,10 @@ const float constant = 1.0F;
 const float linear = 0.09F;
 const float quadratic = 0.032F;
 
-const mat3 ditherMatrix = mat3(
-    vec3(0.0F, 0.5F, 0.125F),
-    vec3(0.625F, 0.25F, 0.875F),
-    vec3(0.1875F, 0.6875F, 0.3125F)
+const mat3 bayerMatrix = mat3(
+    vec3(0.0F, 32.0F, 8.0F),
+    vec3(48.0F, 16.0F, 40.0F),
+    vec3(12.0F, 44.0F, 4.0F)
 );
 
 out vec4 color;
@@ -42,7 +42,9 @@ vec4 spherical(Light light) {
     vec3 transformed = normalize(m_normal);
 
     float direction = dot(transformed, normalize(magnitude));
-    float intensity = max(direction, 0.0F) * (10.0F * light.color.w);
+
+    float radius = 16.0F;
+    float intensity = max(direction, 0.0F) * (radius * light.color.w);
 
     return vec4((light.color.rgb * intensity) * attenuation, 1.0F);
 }
@@ -58,12 +60,12 @@ vec4 minVec4(vec4 l, vec4 r) {
 vec4 ditherColor(vec4 color) {
     float grayscale = dot(color.rgb, vec3(0.299F, 0.587F, 0.114F));
 
-    vec2 size = vec2(gl_FragCoord.x, gl_FragCoord.y) * 0.5F;
+    vec2 size = vec2(gl_FragCoord.x, gl_FragCoord.y) * 1.0F;
     vec3 offset = vec3(
-        ditherMatrix[int(mod(size.y, 3.0F))][int(mod(size.x, 3.0F))],
-        ditherMatrix[int(mod(size.y + 1.0F, 3.0F))][int(mod(size.x + 1.0F, 3.0F))],
-        ditherMatrix[int(mod(size.y + 2.0F, 3.0F))][int(mod(size.x + 2.0F, 3.0F))]
-    ) * grayscale;
+        bayerMatrix[int(mod(size.y, 3.0F))][int(mod(size.x, 3.0F))],
+        bayerMatrix[int(mod(size.y + 1.0F, 3.0F))][int(mod(size.x + 1.0F, 3.0F))],
+        bayerMatrix[int(mod(size.y + 2.0F, 3.0F))][int(mod(size.x + 2.0F, 3.0F))]
+    )* (1.0F / 64.0F);
 
     vec3 ditheredColor = color.rgb + (offset * (grayscale - 0.5F));
     return vec4(ditheredColor, 1.0F);
@@ -79,13 +81,10 @@ void main() {
     for(int i = 0; i < size; ++i) {
         result += spherical(lights[i]);
     }
-    result = minVec4(result, m_lightMap * 0.75F);
+    result = minVec4(result, vec4(m_lightMap.rgb * 1.25F, 1.0F));
 
-    float brightness = 32.0F;
-    vec4 sdf = minVec4(vec4(result.rgb * brightness + m_lightMap.rgb, 1.0F), 1.0F, 1.0F, 1.0F, 1.0F);
-
-    vec4 dithered = ditherColor(pixel * result * sdf);
-    color = dithered;
+    float brightness = 0.75F;
+    color = ditherColor(pixel * vec4(result.rgb * brightness, 1.0F));
 
     if (m_normal.xyz == 0) {
         color = pixel * m_lightMap;

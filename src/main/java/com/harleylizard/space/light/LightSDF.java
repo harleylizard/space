@@ -1,13 +1,23 @@
-package com.harleylizard.space.graphics.light;
+package com.harleylizard.space.light;
 
 import com.harleylizard.space.math.Color;
 
-public final class LightSignedDistanceField {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-    private LightSignedDistanceField() {
+public final class LightSDF implements Iterable<Light> {
+    private final List<Light> lights = new ArrayList<>();
+
+    public void add(Light light) {
+        lights.add(light);
     }
 
-    public int getLight(Lights lights, int x, int y, int z) {
+    public void remove(Light light) {
+        lights.remove(light);
+    }
+
+    public int getColor(int x, int y, int z) {
         var r = 0.0F;
         var g = 0.0F;
         var b = 0.0F;
@@ -38,15 +48,16 @@ public final class LightSignedDistanceField {
         return Color.pack(r, g, b, a);
     }
 
-    public static LightSignedDistanceField createFrom(Lights lights) {
-        return new LightSignedDistanceField();
+    public int getSize() {
+        return lights.size();
+    }
+
+    @Override
+    public Iterator<Light> iterator() {
+        return lights.iterator();
     }
 
     private static double getDistance(double x, double y, double z, double nx, double ny, double nz, double r) {
         return Math.sqrt(Math.pow(x - nx, 2) + Math.pow(y - ny, 2) + Math.pow(z - nz, 2)) - r;
-    }
-
-    private static int toIndex(int x, int y, int z) {
-        return (z * 32 * 32) + (y * 32) + x;
     }
 }

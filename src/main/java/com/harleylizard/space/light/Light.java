@@ -1,8 +1,9 @@
-package com.harleylizard.space.graphics.light;
+package com.harleylizard.space.light;
+
+import com.harleylizard.space.math.Color;
 
 public final class Light {
     private final int color;
-
     private float x;
     private float y;
     private float z;
@@ -47,5 +48,9 @@ public final class Light {
 
     public static Light of(int color) {
         return new Light(color);
+    }
+
+    public static Light of(float r, float g, float b, float a) {
+        return new Light(Color.pack(r, g, b, a));
     }
 }
