@@ -33,6 +33,7 @@ public final class Plane implements Shape {
     public void build(CullGetter cullGetter, VertexParameters parameters, Matrix4fStack stack, int x, int y, int z, boolean ambient, int i) {
         stack.pushMatrix();
         stack.translate(0.5F, 0.5F, 0.5F);
+        stack.scale(1.412F, 1.0F, 1.412F);
         stack.rotate(this.x, 1.0F, 0.0F, 0.0F);
         stack.rotate(this.y, 0.0F, 1.0F, 0.0F);
         stack.rotate(this.z, 0.0F, 0.0F, 1.0F);

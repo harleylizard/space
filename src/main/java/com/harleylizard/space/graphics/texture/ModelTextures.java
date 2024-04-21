@@ -19,9 +19,14 @@ public final class ModelTextures {
     private static final int WIDTH = 16;
     private static final int HEIGHT = 16;
 
+    private static boolean bound;
+
     private ModelTextures() {}
 
     public static void bind(int unit) {
+        if (bound) {
+            return;
+        }
         try (var stack = MemoryStack.stackPush()) {
             var buffer = stack.callocInt(3);
 
@@ -50,6 +55,7 @@ public final class ModelTextures {
             }
             glGenerateTextureMipmap(texture);
             glBindTextureUnit(unit, texture);
+            bound = true;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

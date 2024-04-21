@@ -17,6 +17,10 @@ public sealed interface VertexParameters permits VaryingVertexParameters {
 
     ByteBuffer getElements();
 
+    int getVerticesInBytes();
+
+    int getElementsInBytes();
+
     int getCount();
 
     void free();

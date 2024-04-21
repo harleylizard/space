@@ -71,6 +71,16 @@ public final class VaryingVertexParameters implements VertexParameters {
     }
 
     @Override
+    public int getVerticesInBytes() {
+        return vertices;
+    }
+
+    @Override
+    public int getElementsInBytes() {
+        return elements;
+    }
+
+    @Override
     public int getCount() {
         return elements / 4;
     }

@@ -3,12 +3,18 @@ package com.harleylizard.space;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
-import com.harleylizard.space.graphics.modeler.ModelerGraphics;
-import com.harleylizard.space.graphics.texture.ModelTextures;
+import com.harleylizard.space.graphics.UniformBuffer;
+import com.harleylizard.space.graphics.debug.DebugGraphics;
+import com.harleylizard.space.graphics.text.English;
+import com.harleylizard.space.graphics.text.Text;
+import com.harleylizard.space.graphics.text.TextGraphics;
 import com.harleylizard.space.input.Keyboard;
 import com.harleylizard.space.input.Mouse;
 import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
+
+import java.sql.Array;
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -27,7 +33,7 @@ public final class Main {
 
         try {
             var quad = new Quad();
-            var program = new ProgramPipeline.Builder()
+            var pipeline = new ProgramPipeline.Builder()
                     .useProgram(Shader.FRAGMENT, "shaders/quad_fragment.glsl")
                     .useProgram(Shader.VERTEX, "shaders/quad_vertex.glsl")
                     .build();
@@ -37,9 +43,12 @@ public final class Main {
             var model = new Matrix4f();
 
             var modeler = new Modeler();
-            var modelerGraphics = new ModelerGraphics();
+            var modelerGraphics = new DebugGraphics();
 
-            ModelTextures.bind(0);
+            var texts = new ArrayList<Text>();
+            var textGraphics = new TextGraphics();
+
+            texts.add(new Text(new English(), "ss", 0, 0));
 
             System.gc();
 
@@ -49,7 +58,7 @@ public final class Main {
             var mouse = new Mouse();
             window.setInput(keyboard, mouse);
 
-            //glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
+            // glClearColor(1.0F, 0.0F, 0.0F, 0.0F);
 
             glEnable(GL_CULL_FACE);
             glEnable(GL_DEPTH_TEST);
@@ -68,7 +77,9 @@ public final class Main {
 
                 player.step(keyboard, mouse);
 
-                modelerGraphics.draw(player, modeler, projection, view, model);
+                modelerGraphics.draw(mouse, player, modeler, projection, view, model);
+
+                textGraphics.draw(window, texts, projection, view, model);
 
                 window.refresh();
             }

@@ -47,4 +47,8 @@ public final class Resources {
             return buffer.flip();
         }
     }
+
+    public static ByteBuffer readImage(String path) throws IOException {
+        return readImage(get(path));
+    }
 }

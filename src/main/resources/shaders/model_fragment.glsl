@@ -72,7 +72,6 @@ vec4 ditherColor(vec4 color) {
     return vec4(ditheredColor, 1.0);
 }
 
-
 // Tangent, Bitangent, Normal matrix.
 mat3 getTBN() {
     vec3 edge0 = dFdx(m_position.xyz);
@@ -95,7 +94,8 @@ void main() {
 
     mat3 tbn = getTBN();
     for(int i = 0; i < size; ++i) {
-        result += createPointLight(lights[i], tbn);
+        vec4 pointLight = createPointLight(lights[i], tbn);
+        result += pointLight;
     }
     // Making sure the light doesn't become completely white when adding low light levels.
     result = minVec4(result, vec4(m_lightMap.rgb * 1.25F, 1.0F));
