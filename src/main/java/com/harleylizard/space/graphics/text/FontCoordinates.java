@@ -32,6 +32,11 @@ public final class FontCoordinates {
     public static FontCoordinates of(int width, int height, int x, int y) {
         var sizeX = 8.0F / (float) width;
         var sizeY = 8.0F / (float) height;
-        return new FontCoordinates(0.0F, 0.0F, sizeX, sizeY);
+
+        var minX = sizeX * x;
+        var minY = sizeY * y;
+        var maxX = sizeX + (sizeX * x);
+        var maxY = sizeY + (sizeY * y);
+        return new FontCoordinates(minX, minY, maxX, maxY);
     }
 }

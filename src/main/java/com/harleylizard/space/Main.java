@@ -3,17 +3,15 @@ package com.harleylizard.space;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Quad;
 import com.harleylizard.space.graphics.Shader;
-import com.harleylizard.space.graphics.UniformBuffer;
 import com.harleylizard.space.graphics.debug.DebugGraphics;
 import com.harleylizard.space.graphics.text.English;
-import com.harleylizard.space.graphics.text.Text;
+import com.harleylizard.space.graphics.text.MutableText;
 import com.harleylizard.space.graphics.text.TextGraphics;
 import com.harleylizard.space.input.Keyboard;
 import com.harleylizard.space.input.Mouse;
 import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -45,10 +43,14 @@ public final class Main {
             var modeler = new Modeler();
             var modelerGraphics = new DebugGraphics();
 
-            var texts = new ArrayList<Text>();
+            var texts = new ArrayList<MutableText>();
             var textGraphics = new TextGraphics();
 
-            texts.add(new Text(new English(), "ss", 0, 0));
+            var english = new English();
+            var fps = new MutableText(english, -46, 26);
+            texts.add(fps);
+
+            fps.set("FPS 0");
 
             System.gc();
 
@@ -66,7 +68,29 @@ public final class Main {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+            var targetFps = 60;
+            var targetTime = 1000000000 / targetFps;
+
+            var previousTime = System.nanoTime();
+            var delta = 0.0D;
+
+            var fpsTimer = System.currentTimeMillis();
+            var frames = 0;
+
             while (!window.shouldClose()) {
+                var currentTime = System.nanoTime();
+                var elapsedTime = currentTime - previousTime;
+
+                previousTime = currentTime;
+
+                delta += elapsedTime / (double) targetTime;
+
+                while (delta >= 1.0D) {
+
+
+                    delta--;
+                }
+
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 var aspectRatio = window.getAspectRatio();
@@ -82,6 +106,14 @@ public final class Main {
                 textGraphics.draw(window, texts, projection, view, model);
 
                 window.refresh();
+
+                frames++;
+
+                if (System.currentTimeMillis() - fpsTimer > 1000) {
+                    fpsTimer += 1000;
+                    fps.set("FPS %d".formatted(frames));
+                    frames = 0;
+                }
             }
         } finally {
             window.destroy();

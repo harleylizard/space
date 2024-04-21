@@ -23,32 +23,26 @@ public final class LightSdf implements Iterable<Light> {
         var b = 0.0F;
         var a = 0.0F;
 
-        var size = lights.size();
-        var segment = lights.size() / 4;
-        for (int j = 0; j < size; j += segment) {
-            for (int i = j; i < Math.min(j + segment, size); i++) {
-                var light = lights.get(i);
+        for (var light : lights) {
+            var v = Math.floor(light.getX());
+            var k = Math.floor(light.getY());
+            var l = Math.floor(light.getZ());
+            var m = light.getR();
+            var n = light.getG();
+            var o = light.getB();
+            var p = light.getA();
 
-                var v = Math.floor(light.getX());
-                var k = Math.floor(light.getY());
-                var l = Math.floor(light.getZ());
-                var m = light.getR();
-                var n = light.getG();
-                var o = light.getB();
-                var p = light.getA();
+            var distance = getDistance(x, y, z, v, k, l, 1.0F);
+            var intensity = Math.min(1.0F, (float) (1.0F / Math.pow(distance, 2)));
 
-                var distance = getDistance(x, y, z, v, k, l, 1.0F);
-                var intensity = Math.min(1.0F, (float) (1.0F / Math.pow(distance, 2)));
-
-                m *= intensity;
-                n *= intensity;
-                o *= intensity;
-                p *= intensity;
-                r += m;
-                g += n;
-                b += o;
-                a += p;
-            }
+            m *= intensity;
+            n *= intensity;
+            o *= intensity;
+            p *= intensity;
+            r += m;
+            g += n;
+            b += o;
+            a += p;
         }
 
         r = Math.min(r, 1.0F);

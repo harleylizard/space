@@ -1,5 +1,4 @@
 {
-  "light": [1.0, 1.0, 1.0, 1.0],
   "textures": {
     "light": {
       "color": "textures/modeler_light.png",

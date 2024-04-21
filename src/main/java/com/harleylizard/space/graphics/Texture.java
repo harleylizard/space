@@ -30,7 +30,7 @@ public final class Texture {
             var width = buffer.get(0);
             var height = buffer.get(1);
 
-            glTextureStorage2D(texture, 1, GL_RGB8, width, height);
+            glTextureStorage2D(texture, 1, GL_RGBA8, width, height);
             glTextureSubImage2D(texture, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
             memFree(image);

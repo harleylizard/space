@@ -57,11 +57,11 @@ public final class TextGraphics {
         glNamedBufferStorage(ebo, elements, flags);
     }
 
-    public void draw(Window window, List<Text> list, Matrix4f projection, Matrix4f view, Matrix4f model) {
+    public void draw(Window window, List<MutableText> list, Matrix4f projection, Matrix4f view, Matrix4f model) {
         upload(list);
 
         var aspectRatio = window.getAspectRatio();
-        var fovy = (float) Math.toRadians(100.0F);
+        var fovy = 28.0F;
 
         projection.identity();
         projection.ortho(-fovy * aspectRatio, fovy * aspectRatio, -fovy, fovy, 1.0F, -1.0F);
@@ -90,7 +90,7 @@ public final class TextGraphics {
         ProgramPipeline.unbind();
     }
 
-    private void upload(List<Text> list) {
+    private void upload(List<MutableText> list) {
         var buffer = memCalloc(((16 + 4) * 4) * getCharSize(list));
 
         var matrix4f = new Matrix4f();
@@ -125,7 +125,7 @@ public final class TextGraphics {
         memFree(buffer);
     }
 
-    private int getCharSize(List<Text> list) {
+    private int getCharSize(List<MutableText> list) {
         var i = 0;
         for (var text : list) {
             i += text.stringify().length();

@@ -2,15 +2,15 @@ package com.harleylizard.space.graphics.text;
 
 import com.harleylizard.space.math.Stringifiable;
 
-public final class Text implements Stringifiable {
+public final class MutableText implements Stringifiable {
     private final Font font;
-    private final String string;
     private final int x;
     private final int y;
 
-    public Text(Font font, String string, int x, int y) {
+    private String string;
+
+    public MutableText(Font font, int x, int y) {
         this.font = font;
-        this.string = string;
         this.x = x;
         this.y = y;
     }
@@ -25,6 +25,10 @@ public final class Text implements Stringifiable {
 
     public Font getFont() {
         return font;
+    }
+
+    public void set(String string) {
+        this.string = string;
     }
 
     @Override

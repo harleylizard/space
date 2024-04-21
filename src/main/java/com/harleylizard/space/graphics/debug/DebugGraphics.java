@@ -79,31 +79,28 @@ public final class DebugGraphics {
         var size = sdf.getSize();
         glProgramUniform1i(fragment, sizeLocation, size);
 
-        CompletableFuture.supplyAsync(() -> {
-            var buffer = memCalloc((8 * 4) * size);
+        var buffer = memCalloc((8 * 4) * size);
 
-            for (var light : sdf) {
-                var x = light.getX();
-                var y = light.getY();
-                var z = light.getZ();
+        for (var light : sdf) {
+            var x = light.getX();
+            var y = light.getY();
+            var z = light.getZ();
 
-                var r = light.getR();
-                var g = light.getG();
-                var b = light.getB();
-                var a = light.getA();
-                buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F);
-                buffer.putFloat(r).putFloat(g).putFloat(b).putFloat(a);
-            }
-            buffer.position(0);
-            return buffer;
-        }).thenAcceptAsync(buffer -> {
-            glNamedBufferData(lightsBuffer, (8 * 4) * size, GL_DYNAMIC_DRAW);
-            var mapped = glMapNamedBuffer(lightsBuffer, GL_READ_WRITE);
-            if (mapped != null) {
-                mapped.put(buffer);
-            }
-            glUnmapBuffer(lightsBuffer);
-            memFree(buffer);
-        }, queue::add);
+            var r = light.getR();
+            var g = light.getG();
+            var b = light.getB();
+            var a = light.getA();
+            buffer.putFloat(x).putFloat(y).putFloat(z).putFloat(1.0F);
+            buffer.putFloat(r).putFloat(g).putFloat(b).putFloat(a);
+        }
+        buffer.position(0);
+
+        glNamedBufferData(lightsBuffer, (8 * 4) * size, GL_DYNAMIC_DRAW);
+        var mapped = glMapNamedBuffer(lightsBuffer, GL_READ_WRITE);
+        if (mapped != null) {
+            mapped.put(buffer);
+        }
+        glUnmapBuffer(lightsBuffer);
+        memFree(buffer);
     }
 }

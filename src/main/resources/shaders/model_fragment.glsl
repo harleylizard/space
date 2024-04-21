@@ -94,8 +94,7 @@ void main() {
 
     mat3 tbn = getTBN();
     for(int i = 0; i < size; ++i) {
-        vec4 pointLight = createPointLight(lights[i], tbn);
-        result += pointLight;
+        result += createPointLight(lights[i], tbn);
     }
     // Making sure the light doesn't become completely white when adding low light levels.
     result = minVec4(result, vec4(m_lightMap.rgb * 1.25F, 1.0F));
