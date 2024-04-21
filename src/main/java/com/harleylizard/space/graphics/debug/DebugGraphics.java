@@ -12,14 +12,12 @@ import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
 
 import java.util.Queue;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL41.glProgramUniform1i;
-import static org.lwjgl.opengl.GL45.glMapNamedBuffer;
 import static org.lwjgl.opengl.GL45.glNamedBufferData;
 import static org.lwjgl.system.MemoryUtil.memCalloc;
 import static org.lwjgl.system.MemoryUtil.memFree;
@@ -38,26 +36,10 @@ public final class DebugGraphics {
     private final Layers layers = new Layers();
     private final MutableScene scene = MutableScene.of("modeler_background.block");
 
-    private final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
-
-    {
-        scene.setBlock(15, 2, 15, Blocks.MODELER_LIGHT);
-    }
 
     public void draw(Mouse mouse, Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
-        if (mouse.isPressed(GLFW_MOUSE_BUTTON_RIGHT)) {
-            var pos = player.getPosition();
-            var x = (int) Math.floor(pos.x + 15.5F);
-            var y = (int) Math.floor(pos.y + 2.5F);
-            var z = (int) Math.floor(pos.z + 15.5F);
-            scene.setBlock(x, y, z, Blocks.MODELER_LIGHT);
-        }
-
-        if (!queue.isEmpty()) {
-            queue.poll().run();
-        }
-
-        scene.draw(layers, sdf, this::uploadLights);
+        scene.draw(layers, sdf);
+        uploadLights();
 
         view.identity();
         view.rotate(player.getRotation());
@@ -95,12 +77,7 @@ public final class DebugGraphics {
         }
         buffer.position(0);
 
-        glNamedBufferData(lightsBuffer, (8 * 4) * size, GL_DYNAMIC_DRAW);
-        var mapped = glMapNamedBuffer(lightsBuffer, GL_READ_WRITE);
-        if (mapped != null) {
-            mapped.put(buffer);
-        }
-        glUnmapBuffer(lightsBuffer);
+        glNamedBufferData(lightsBuffer, buffer, GL_STREAM_DRAW);
         memFree(buffer);
     }
 }

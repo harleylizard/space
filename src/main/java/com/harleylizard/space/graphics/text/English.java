@@ -8,7 +8,7 @@ public final class English implements Font {
     private static final int WIDTH = 64;
     private static final int HEIGHT = 96;
 
-    private static final FontCoordinates EMPTY = FontCoordinates.of(WIDTH, HEIGHT, 0, 0);
+    private static final FontCoordinates EMPTY = FontCoordinates.of(WIDTH, HEIGHT, 0, 11);
 
     private final Char2ObjectMap<FontCoordinates> map;
 
@@ -42,7 +42,35 @@ public final class English implements Font {
         map.put('Y', FontCoordinates.of(WIDTH, HEIGHT, 0, 3));
         map.put('Z', FontCoordinates.of(WIDTH, HEIGHT, 1, 3));
 
+        map.put('a', FontCoordinates.of(WIDTH, HEIGHT, 0, 4));
+        map.put('b', FontCoordinates.of(WIDTH, HEIGHT, 1, 4));
+        map.put('c', FontCoordinates.of(WIDTH, HEIGHT, 2, 4));
+        map.put('d', FontCoordinates.of(WIDTH, HEIGHT, 3, 4));
+        map.put('e', FontCoordinates.of(WIDTH, HEIGHT, 4, 4));
+        map.put('f', FontCoordinates.of(WIDTH, HEIGHT, 5, 4));
+        map.put('g', FontCoordinates.of(WIDTH, HEIGHT, 6, 4));
+        map.put('h', FontCoordinates.of(WIDTH, HEIGHT, 7, 4));
+
+        map.put('i', FontCoordinates.of(WIDTH, HEIGHT, 0, 5));
+        map.put('j', FontCoordinates.of(WIDTH, HEIGHT, 1, 5));
+        map.put('k', FontCoordinates.of(WIDTH, HEIGHT, 2, 5));
+        map.put('l', FontCoordinates.of(WIDTH, HEIGHT, 3, 5));
+        map.put('m', FontCoordinates.of(WIDTH, HEIGHT, 4, 5));
+        map.put('n', FontCoordinates.of(WIDTH, HEIGHT, 5, 5));
+        map.put('o', FontCoordinates.of(WIDTH, HEIGHT, 6, 5));
+        map.put('p', FontCoordinates.of(WIDTH, HEIGHT, 7, 5));
+
+        map.put('q', FontCoordinates.of(WIDTH, HEIGHT, 0, 6));
+        map.put('r', FontCoordinates.of(WIDTH, HEIGHT, 1, 6));
         map.put('s', FontCoordinates.of(WIDTH, HEIGHT, 2, 6));
+        map.put('t', FontCoordinates.of(WIDTH, HEIGHT, 3, 6));
+        map.put('u', FontCoordinates.of(WIDTH, HEIGHT, 4, 6));
+        map.put('v', FontCoordinates.of(WIDTH, HEIGHT, 5, 6));
+        map.put('w', FontCoordinates.of(WIDTH, HEIGHT, 6, 6));
+        map.put('x', FontCoordinates.of(WIDTH, HEIGHT, 7, 6));
+
+        map.put('y', FontCoordinates.of(WIDTH, HEIGHT, 0, 7));
+        map.put('z', FontCoordinates.of(WIDTH, HEIGHT, 1, 7));
 
         map.put('0', FontCoordinates.of(WIDTH, HEIGHT, 0, 8));
         map.put('1', FontCoordinates.of(WIDTH, HEIGHT, 1, 8));
@@ -54,6 +82,8 @@ public final class English implements Font {
         map.put('7', FontCoordinates.of(WIDTH, HEIGHT, 7, 8));
         map.put('8', FontCoordinates.of(WIDTH, HEIGHT, 0, 9));
         map.put('9', FontCoordinates.of(WIDTH, HEIGHT, 1, 9));
+        map.put('.', FontCoordinates.of(WIDTH, HEIGHT, 4, 9));
+        map.put(',', FontCoordinates.of(WIDTH, HEIGHT, 5, 9));
 
         this.map = Char2ObjectMaps.unmodifiable(map);
     }

@@ -29,11 +29,10 @@ public final class MutableScene implements CullGetter {
         this.blocks = blocks;
     }
 
-    public void draw(Layers layers, LightSdf sdf, Runnable runnable) {
+    public void draw(Layers layers, LightSdf sdf) {
         if (!updated) {
             sdf.clear();
             upload(layers, sdf);
-            runnable.run();
             layers.upload();
             ModelTextures.bind(0);
             updated = true;

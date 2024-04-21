@@ -48,7 +48,11 @@ public final class Main {
 
             var english = new English();
             var fps = new MutableText(english, -46, 26);
+            var copyright = new MutableText(english, -25, -26);
+            copyright.set("Copyright 2024. Harley Oswald, All Rights Reserved.");
+
             texts.add(fps);
+            texts.add(copyright);
 
             fps.set("FPS 0");
 
@@ -68,7 +72,7 @@ public final class Main {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            var targetFps = 60;
+            var targetFps = 120;
             var targetTime = 1000000000 / targetFps;
 
             var previousTime = System.nanoTime();
@@ -86,8 +90,7 @@ public final class Main {
                 delta += elapsedTime / (double) targetTime;
 
                 while (delta >= 1.0D) {
-
-
+                    player.step(keyboard, mouse);
                     delta--;
                 }
 
@@ -98,8 +101,6 @@ public final class Main {
 
                 projection.identity();
                 projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
-
-                player.step(keyboard, mouse);
 
                 modelerGraphics.draw(mouse, player, modeler, projection, view, model);
 

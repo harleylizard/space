@@ -35,14 +35,10 @@ public final class LightSdf implements Iterable<Light> {
             var distance = getDistance(x, y, z, v, k, l, 1.0F);
             var intensity = Math.min(1.0F, (float) (1.0F / Math.pow(distance, 2)));
 
-            m *= intensity;
-            n *= intensity;
-            o *= intensity;
-            p *= intensity;
-            r += m;
-            g += n;
-            b += o;
-            a += p;
+            r += m * intensity;
+            g += n * intensity;
+            b += o * intensity;
+            a += p * intensity;
         }
 
         r = Math.min(r, 1.0F);

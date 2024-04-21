@@ -18,7 +18,7 @@ public final class TextGraphics {
     ProgramPipeline pipeline = new ProgramPipeline.Builder()
             .useProgram(Shader.FRAGMENT, "shaders/text_fragment.glsl")
             .useProgram(Shader.VERTEX, "shaders/text_vertex.glsl")
-            .useBuffer(Shader.VERTEX, "bufferStorage", 0)
+            .useBuffer(Shader.VERTEX, "bufferStorage", 1)
             .build();
     private final int fragment = pipeline.getProgram(Shader.FRAGMENT);
     private final int location = glGetUniformLocation(fragment, "sampler");
@@ -98,6 +98,10 @@ public final class TextGraphics {
         var j = 0;
         for (var text : list) {
             var string = text.stringify();
+            if (string == null || string.isEmpty()) {
+                continue;
+            }
+
             var x = text.getX();
             var y = text.getY();
             var font = text.getFont();
@@ -128,7 +132,10 @@ public final class TextGraphics {
     private int getCharSize(List<MutableText> list) {
         var i = 0;
         for (var text : list) {
-            i += text.stringify().length();
+            var string = text.stringify();
+            if (string != null && !string.isEmpty()) {
+                i += string.length();
+            }
         }
         return i;
     }
