@@ -18,10 +18,11 @@ in vec3 m_uv;
 in vec3 m_normal;
 in vec4 m_lightMap;
 
-uniform sampler2DArray tSampler;
+uniform sampler2DArray sampler;
+uniform float aspectRatio;
 
-vec3 normalMap = texture(tSampler, vec3(m_uv.xy, m_uv.z + 1)).xyz;
-vec3 emissiveMap = texture(tSampler, vec3(m_uv.xy, m_uv.z + 2)).xyz;
+vec3 normalMap = texture(sampler, vec3(m_uv.xy, m_uv.z + 1)).xyz;
+vec3 emissiveMap = texture(sampler, vec3(m_uv.xy, m_uv.z + 2)).xyz;
 
 uniform int size;
 
@@ -62,7 +63,7 @@ vec4 minVec4(vec4 l, vec4 r) {
 vec4 ditherColor(vec4 color) {
     float grayscale = dot(color.rgb, vec3(0.2126F, 0.7152F, 0.0722F));
 
-    vec2 ditherPos = fract(gl_FragCoord.xy / 4.0F);
+    vec2 ditherPos = fract(gl_FragCoord.xy * aspectRatio / 1.0);
     grayscale += (BAYER_MATRIX[int(ditherPos.x)][int(ditherPos.y)] - 7.5F) / 16.0F;
 
     vec2 fragCoords = mod(gl_FragCoord.xy, 4.0F);
@@ -87,7 +88,7 @@ mat3 getTBN() {
 }
 
 void main() {
-    vec4 pixel = texture(tSampler, vec3(m_uv));
+    vec4 pixel = texture(sampler, vec3(m_uv));
     if (pixel.a == 0) { // Transparent textures.
         discard;
     }
@@ -101,6 +102,7 @@ void main() {
     result = minVec4(result, vec4(m_lightMap.rgb * 1.25F, 1.0F));
 
     float brightness = 1.25F;
+
     color = ditherColor(pixel * vec4(result.rgb * brightness, 1.0F));
 
     if (m_normal.xyz == 0) { // Ambient models

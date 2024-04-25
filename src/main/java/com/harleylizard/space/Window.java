@@ -87,4 +87,12 @@ public final class Window {
     public float getAspectRatio() {
         return (float) width / height;
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

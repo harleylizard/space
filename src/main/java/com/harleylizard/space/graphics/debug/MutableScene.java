@@ -2,6 +2,7 @@ package com.harleylizard.space.graphics.debug;
 
 import com.harleylizard.space.Resources;
 import com.harleylizard.space.block.Block;
+import com.harleylizard.space.block.Blocks;
 import com.harleylizard.space.graphics.model.ModelReader;
 import com.harleylizard.space.graphics.texture.ModelTextures;
 import com.harleylizard.space.graphics.vertex.CullGetter;
@@ -10,7 +11,6 @@ import com.harleylizard.space.graphics.vertex.Layers;
 import com.harleylizard.space.light.Light;
 import com.harleylizard.space.light.LightSdf;
 import com.harleylizard.space.math.Direction;
-import com.harleylizard.space.block.Blocks;
 import org.joml.Matrix4fStack;
 
 import java.io.DataInputStream;
@@ -27,6 +27,9 @@ public final class MutableScene implements CullGetter {
     private MutableScene(List<Block> palette, int[] blocks) {
         this.palette = palette;
         this.blocks = blocks;
+
+        palette.add(Blocks.MODELER_LIGHT);
+        blocks[indexOf(15, 4, 15)] = palette.indexOf(Blocks.MODELER_LIGHT);
     }
 
     public void draw(Layers layers, LightSdf sdf) {
@@ -41,7 +44,7 @@ public final class MutableScene implements CullGetter {
 
     public void upload(Layers layers, LightSdf sdf) {
         try {
-            var stack = new Matrix4fStack(3);
+            var stack = new Matrix4fStack(4);
             stack.pushMatrix();
 
             var size = blocks.length;
@@ -50,17 +53,14 @@ public final class MutableScene implements CullGetter {
                 if (block == Blocks.MODELER_AIR) {
                     continue;
                 }
-
-                var x = i % 32;
-                var y = (i / 32) % 32;
-                var z = i / (32 * 32);
-                stack.identity();
-                stack.translate(x, y, z);
-
                 var model = ModelReader.getModel(Blocks.REGISTRY, block);
 
                 var color = model.getLight();
                 if (color != 0) {
+                    var x = i % 32;
+                    var y = (i / 32) % 32;
+                    var z = i / (32 * 32);
+
                     var light = Light.of(color);
                     light.move(x + 0.5F, y + 0.5F, z + 0.5F);
                     sdf.add(light);
@@ -84,9 +84,22 @@ public final class MutableScene implements CullGetter {
                 var parameters = layers.getVertexParameter(model.getLayer());
 
                 var j = sdf.getColor(x, y, z);
-                for (var shape : model) {
-                    shape.build(this, parameters, stack, x, y, z, model.isAmbient(), j);
+                stack.pushMatrix();
+                if (model.isAmbient()) {
+                    stack.translate(0.5F, 0.5F, 0.5F);
+
+                    var l = (x + y + z) << 8 & 360;
+                    var r = (float) Math.toRadians(l);
+                    stack.rotate(r, 0.0F, 1.0F, 0.0F);
+
+                    stack.translate(-0.5F, -0.5F, -0.5F);
                 }
+                for (var shape : model) {
+
+                    shape.build(this, parameters, stack, x, y, z, model.isAmbient(), j);
+
+                }
+                stack.popMatrix();
             }
             stack.popMatrix();
         } catch (IOException e) {
@@ -109,7 +122,7 @@ public final class MutableScene implements CullGetter {
         }
         try {
             var model = ModelReader.getModel(Blocks.REGISTRY, block);
-            return model.getLayer() == Layer.SOLID;
+            return model.getLayer() == Layer.SOLID && !model.isAmbient();
         } catch (IOException e) {
             return false;
         }

@@ -69,6 +69,26 @@ public final class ModelDeserializer {
                 var from = jsonObject.getAsJsonArray("from");
                 var to = jsonObject.getAsJsonArray("to");
                 var faces = createFaces(lookup, jsonObject.getAsJsonObject("face"));
+
+                var pivotX = 0.0F;
+                var pivotY = 0.0F;
+                var pivotZ = 0.0F;
+                var rotationX = 0.0F;
+                var rotationY = 0.0F;
+                var rotationZ = 0.0F;
+                if (jsonObject.has("rotation")) {
+                    var rotation = jsonObject.getAsJsonObject("rotation");
+                    var pivot = rotation.getAsJsonArray("pivot");
+                    pivotX = pivot.get(0).getAsFloat() / 16.0F;
+                    pivotY = pivot.get(1).getAsFloat() / 16.0F;
+                    pivotZ = pivot.get(2).getAsFloat() / 16.0F;
+
+                    var angle = rotation.getAsJsonArray("angle");
+                    rotationX = (float) Math.toRadians(angle.get(0).getAsFloat());
+                    rotationY = (float) Math.toRadians(angle.get(1).getAsFloat());
+                    rotationZ = (float) Math.toRadians(angle.get(2).getAsFloat());
+                }
+
                 return new Cube(
                         from.get(0).getAsFloat() / 16.0F,
                         from.get(1).getAsFloat() / 16.0F,
@@ -76,6 +96,8 @@ public final class ModelDeserializer {
                         to.get(0).getAsFloat() / 16.0F,
                         to.get(1).getAsFloat() / 16.0F,
                         to.get(2).getAsFloat() / 16.0F,
+                        pivotX, pivotY, pivotZ,
+                        rotationX, rotationY, rotationZ,
                         faces
                 );
             }

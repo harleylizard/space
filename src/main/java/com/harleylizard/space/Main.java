@@ -72,7 +72,7 @@ public final class Main {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            var targetFps = 120;
+            var targetFps = 60;
             var targetTime = 1000000000 / targetFps;
 
             var previousTime = System.nanoTime();
@@ -90,7 +90,8 @@ public final class Main {
                 delta += elapsedTime / (double) targetTime;
 
                 while (delta >= 1.0D) {
-                    player.step(keyboard, mouse);
+                    player.step(keyboard, mouse, (float) (delta / (float) targetFps));
+
                     delta--;
                 }
 
@@ -102,8 +103,7 @@ public final class Main {
                 projection.identity();
                 projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
 
-                modelerGraphics.draw(mouse, player, modeler, projection, view, model);
-
+                modelerGraphics.draw(window, player, modeler, projection, view, model);
                 textGraphics.draw(window, texts, projection, view, model);
 
                 window.refresh();

@@ -20,7 +20,7 @@ public final class VaryingVertexParameters implements VertexParameters {
     private VaryingVertexParameters() {}
 
     @Override
-    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, float nx, float ny, float nz, int i) {
+    public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, float nx, float ny, float nz, int i, boolean ambient) {
         var vec4f = matrix4f.transform(x, y, z, 1.0F, new Vector4f());
 
         var r = (float) ((i >> 16) & 0xFF) / 255.0F;
@@ -31,14 +31,14 @@ public final class VaryingVertexParameters implements VertexParameters {
         buffer
                 .putFloat(vec4f.x).putFloat(vec4f.y).putFloat(vec4f.z).putFloat(1.0F)
                 .putFloat(u).putFloat(v).putFloat(t)
-                .putFloat(nx).putFloat(ny).putFloat(nz)
+                .putFloat(ambient ? 0 : nx).putFloat(ambient ? 0 : ny).putFloat(ambient ? 0 : nz)
                 .putFloat(r).putFloat(g).putFloat(b).putFloat(a);
         vertices += VERTEX_SIZE;
     }
 
     @Override
     public void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, ImmutableVector3i normal, int i) {
-        vertex(matrix4f, x, y, z, u, v, t, normal.getX(), normal.getY(), normal.getZ(), i);
+        vertex(matrix4f, x, y, z, u, v, t, normal.getX(), normal.getY(), normal.getZ(), i, false);
     }
 
     @Override

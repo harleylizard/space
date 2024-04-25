@@ -61,7 +61,7 @@ public final class TextGraphics {
         upload(list);
 
         var aspectRatio = window.getAspectRatio();
-        var fovy = 28.0F;
+        var fovy = 28.75F;
 
         projection.identity();
         projection.ortho(-fovy * aspectRatio, fovy * aspectRatio, -fovy, fovy, 1.0F, -1.0F);

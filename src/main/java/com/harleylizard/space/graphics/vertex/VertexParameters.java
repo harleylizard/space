@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 
 public sealed interface VertexParameters permits VaryingVertexParameters {
 
-    void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, float nx, float ny, float nz, int i);
+    void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, float nx, float ny, float nz, int i, boolean ambient);
 
     void vertex(Matrix4f matrix4f, float x, float y, float z, float u, float v, int t, ImmutableVector3i normal, int i);
 

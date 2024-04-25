@@ -1,7 +1,7 @@
 package com.harleylizard.space.graphics.debug;
 
 import com.harleylizard.space.Player;
-import com.harleylizard.space.block.Blocks;
+import com.harleylizard.space.Window;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
@@ -11,13 +11,9 @@ import com.harleylizard.space.light.LightSdf;
 import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL41.glProgramUniform1i;
+import static org.lwjgl.opengl.GL41.*;
 import static org.lwjgl.opengl.GL45.glNamedBufferData;
 import static org.lwjgl.system.MemoryUtil.memCalloc;
 import static org.lwjgl.system.MemoryUtil.memFree;
@@ -30,6 +26,7 @@ public final class DebugGraphics {
             .build();
     private final int fragment = pipeline.getProgram(Shader.FRAGMENT);
     private final int sizeLocation = glGetUniformLocation(fragment, "size");
+    private final int aspectRatioLocation = glGetUniformLocation(fragment, "aspectRatio");
     private final int lightsBuffer = pipeline.getBuffer("lightsBuffer");
 
     private final LightSdf sdf = new LightSdf();
@@ -37,13 +34,14 @@ public final class DebugGraphics {
     private final MutableScene scene = MutableScene.of("modeler_background.block");
 
 
-    public void draw(Mouse mouse, Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
+    public void draw(Window window, Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
+        glProgramUniform1f(fragment, aspectRatioLocation, window.getAspectRatio());
+
         scene.draw(layers, sdf);
         uploadLights();
 
         view.identity();
         view.rotate(player.getRotation());
-        view.translate(-15.5F, -4.0F, -15.5F);
 
         var position = player.getPosition();
         view.translate(-position.x, -position.y, -position.z);
