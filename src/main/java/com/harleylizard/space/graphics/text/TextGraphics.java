@@ -1,10 +1,8 @@
 package com.harleylizard.space.graphics.text;
 
-import com.harleylizard.space.Window;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.Texture;
-import com.harleylizard.space.graphics.UniformBuffer;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -22,15 +20,12 @@ public final class TextGraphics {
             .build();
     private final int fragment = pipeline.getProgram(Shader.FRAGMENT);
     private final int location = glGetUniformLocation(fragment, "sampler");
-
     private final int ssbo = pipeline.getBuffer("bufferStorage");
-
 
     private final int vao = glCreateVertexArrays();
 
-    private final int texture = Texture.create("textures/font/english.png");
-
     {
+        var texture = Texture.create("textures/font/english.png");
         glBindTextureUnit(1, texture);
 
         var vbo = glCreateBuffers();
@@ -57,20 +52,8 @@ public final class TextGraphics {
         glNamedBufferStorage(ebo, elements, flags);
     }
 
-    public void draw(Window window, List<MutableText> list, Matrix4f projection, Matrix4f view, Matrix4f model) {
+    public void draw(List<MutableText> list) {
         upload(list);
-
-        var aspectRatio = window.getAspectRatio();
-        var fovy = 28.75F;
-
-        projection.identity();
-        projection.ortho(-fovy * aspectRatio, fovy * aspectRatio, -fovy, fovy, 1.0F, -1.0F);
-
-        view.identity();
-
-        model.identity();
-
-        UniformBuffer.uploadMatrices(projection, view, model);
 
         glProgramUniform1i(fragment, location, 1);
 

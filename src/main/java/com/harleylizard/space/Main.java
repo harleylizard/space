@@ -1,8 +1,6 @@
 package com.harleylizard.space;
 
-import com.harleylizard.space.graphics.ProgramPipeline;
-import com.harleylizard.space.graphics.Quad;
-import com.harleylizard.space.graphics.Shader;
+import com.harleylizard.space.graphics.*;
 import com.harleylizard.space.graphics.debug.DebugGraphics;
 import com.harleylizard.space.graphics.text.English;
 import com.harleylizard.space.graphics.text.MutableText;
@@ -54,6 +52,8 @@ public final class Main {
             texts.add(fps);
             texts.add(copyright);
 
+            var splashGraphics = new SplashGraphics();
+
             fps.set("FPS 0");
 
             System.gc();
@@ -90,21 +90,39 @@ public final class Main {
                 delta += elapsedTime / (double) targetTime;
 
                 while (delta >= 1.0D) {
-                    player.step(keyboard, mouse, (float) (delta / (float) targetFps));
-
+                    splashGraphics.step();
+                    if (splashGraphics.isReady()) {
+                        player.step(keyboard, mouse, (float) (delta / (float) targetFps));
+                    }
                     delta--;
                 }
 
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+                if (splashGraphics.isReady()) {
+                    var aspectRatio = window.getAspectRatio();
+                    var fovy = (float) Math.toRadians(70.0F);
+
+                    projection.identity();
+                    projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
+
+                    modelerGraphics.draw(window, player, modeler, projection, view, model);
+                }
+
+                // GUI
                 var aspectRatio = window.getAspectRatio();
-                var fovy = (float) Math.toRadians(70.0F);
+                var fovy = 28.75F;
 
                 projection.identity();
-                projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
+                projection.ortho(-fovy * aspectRatio, fovy * aspectRatio, -fovy, fovy, 1.0F, -1.0F);
 
-                modelerGraphics.draw(window, player, modeler, projection, view, model);
-                textGraphics.draw(window, texts, projection, view, model);
+                view.identity();
+                model.identity();
+
+                UniformBuffer.uploadMatrices(projection, view, model);
+
+                splashGraphics.draw();
+                textGraphics.draw(texts);
 
                 window.refresh();
 

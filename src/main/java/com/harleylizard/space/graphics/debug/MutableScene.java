@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MutableScene implements CullGetter {
+    public static MutableScene SCENE;
+
     private final List<Block> palette;
     private final int[] blocks;
 
@@ -139,6 +141,13 @@ public final class MutableScene implements CullGetter {
         z = Math.floorMod(z, 32);
         blocks[indexOf(x, y, z)] = i;
         updated = false;
+    }
+
+    public Block getBlock(int x, int y, int z) {
+        if (x < 0 || y < 0 || z < 0 || x > 31 || y > 31 || z > 31) {
+            return Blocks.MODELER_AIR;
+        }
+        return palette.get(blocks[indexOf(x, y, z)]);
     }
 
     private static int indexOf(int x, int y, int z) {

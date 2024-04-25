@@ -31,7 +31,7 @@ public final class DebugGraphics {
 
     private final LightSdf sdf = new LightSdf();
     private final Layers layers = new Layers();
-    private final MutableScene scene = MutableScene.of("modeler_background.block");
+    private final MutableScene scene = MutableScene.SCENE = MutableScene.of("modeler_background.block");
 
 
     public void draw(Window window, Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {

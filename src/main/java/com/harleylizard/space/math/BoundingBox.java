@@ -22,9 +22,33 @@ public final class BoundingBox {
     }
 
     public boolean intersects(BoundingBox boundingBox) {
-        var x = maxX >= boundingBox.minX && minX <= boundingBox.maxX;
-        var y = maxY >= boundingBox.minY && minY <= boundingBox.maxY;
-        var z = maxZ >= boundingBox.minZ && minZ <= boundingBox.maxZ;
+        var x = maxX > boundingBox.minX && minX < boundingBox.maxX;
+        var y = maxY > boundingBox.minY && minY < boundingBox.maxY;
+        var z = maxZ > boundingBox.minZ && minZ < boundingBox.maxZ;
         return x && y && z;
+    }
+
+    public float getMinX() {
+        return minX;
+    }
+
+    public float getMinY() {
+        return minY;
+    }
+
+    public float getMinZ() {
+        return minZ;
+    }
+
+    public float getMaxX() {
+        return maxX;
+    }
+
+    public float getMaxY() {
+        return maxY;
+    }
+
+    public float getMaxZ() {
+        return maxZ;
     }
 }
