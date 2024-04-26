@@ -15,7 +15,7 @@ public final class Player {
 
     private final BoundingBox boundingBox = new BoundingBox(-0.25F, -1.5F, -0.25F, 0.25F, 0.45F, 0.25F);
 
-    private final Vector3f position = new Vector3f().add(15.0F, 7.0F, 15.0F);
+    private final Vector3f position = new Vector3f().add(15.5F, 8.0F, 15.5F);
     private final Vector3f velocity = new Vector3f();
 
     private final Quaternionf rotation = new Quaternionf();
@@ -45,15 +45,12 @@ public final class Player {
         lastX = x;
         lastY = y;
 
-        var gravity = 3.0F * time;
-        velocity.y -= gravity;
-
         move(keyboard, time);
         move(time);
     }
 
     private void move(Keyboard keyboard, float time) {
-        var speed = 2.0F * time;
+        var speed = 1.75F * time;
         var sin = Math.sin(yaw);
         var cos = Math.cos(yaw);
 
@@ -74,21 +71,26 @@ public final class Player {
             velocity.z += speed * sin;
         }
         if (keyboard.isPressed(GLFW_KEY_SPACE)) {
-            //velocity.y += speed;
+            velocity.y += speed;
         }
         if (keyboard.isPressed(GLFW_KEY_LEFT_SHIFT)) {
-            //velocity.y -= speed;
+            velocity.y -= speed;
+        }
+        if (keyboard.isPressed(GLFW_KEY_J)) {
+            position.set(15.5F, 8.0F, 15.5F);
+            velocity.set(0.0F);
         }
     }
 
     private void move(float time) {
-        var friction = 1.45F;
+        var friction = 1.25F;
         velocity.div(friction);
-        collide(time);
+
+        collide();
         position.add(velocity);
     }
 
-    private void collide(float time) {
+    private void collide() {
         var futureX = position.x + velocity.x;
         var futureY = position.y + velocity.y;
         var futureZ = position.z + velocity.z;
@@ -103,9 +105,12 @@ public final class Player {
             var k = y + (int) Math.floor(position.y);
             var l = z + (int) Math.floor(position.z);
             var block = MutableScene.SCENE.getBlock(j, k, l);
-            var colliding = block.getBoundingBox();
-            if (colliding != null) {
-                var moved = colliding.move(j, k, l);
+            if (block == null) {
+                continue;
+            }
+            var properties = block.getProperties();
+            if (properties.canCollide()) {
+                var moved = properties.getBoundingBox().move(j, k, l);
                 if (boundingBoxX.intersects(moved)) {
                     velocity.x = 0.0F;
                 }

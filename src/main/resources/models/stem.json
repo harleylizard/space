@@ -1,6 +1,6 @@
 {
   "textures": {
-    "stem": "textures/modeler_stem.png"
+    "stem": "textures/block/stem.png"
   },
   "shapes": [
     {

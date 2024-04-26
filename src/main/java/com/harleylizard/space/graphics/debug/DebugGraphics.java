@@ -6,14 +6,13 @@ import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
 import com.harleylizard.space.graphics.vertex.Layers;
-import com.harleylizard.space.input.Mouse;
 import com.harleylizard.space.light.LightSdf;
-import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL41.*;
+import static org.lwjgl.opengl.GL41.glProgramUniform1f;
+import static org.lwjgl.opengl.GL41.glProgramUniform1i;
 import static org.lwjgl.opengl.GL45.glNamedBufferData;
 import static org.lwjgl.system.MemoryUtil.memCalloc;
 import static org.lwjgl.system.MemoryUtil.memFree;
@@ -25,17 +24,28 @@ public final class DebugGraphics {
             .useBuffer(Shader.FRAGMENT, "lightsBuffer", 0)
             .build();
     private final int fragment = pipeline.getProgram(Shader.FRAGMENT);
+    private final int vertex = pipeline.getProgram(Shader.VERTEX);
+
     private final int sizeLocation = glGetUniformLocation(fragment, "size");
     private final int aspectRatioLocation = glGetUniformLocation(fragment, "aspectRatio");
+    private final int timeLocation = glGetUniformLocation(vertex, "time");
+
     private final int lightsBuffer = pipeline.getBuffer("lightsBuffer");
 
     private final LightSdf sdf = new LightSdf();
     private final Layers layers = new Layers();
-    private final MutableScene scene = MutableScene.SCENE = MutableScene.of("modeler_background.block");
+    private final MutableScene scene = MutableScene.SCENE = MutableScene.of("debug.block");
 
+    private float steps;
+    private float time;
 
-    public void draw(Window window, Player player, Modeler modeler, Matrix4f projection, Matrix4f view, Matrix4f model) {
+    public void step(float time) {
+        steps += 1.25F * time;
+    }
+
+    public void draw(Window window, Player player, Matrix4f projection, Matrix4f view, Matrix4f model) {
         glProgramUniform1f(fragment, aspectRatioLocation, window.getAspectRatio());
+        glProgramUniform1f(vertex, timeLocation, steps);
 
         scene.draw(layers, sdf);
         uploadLights();

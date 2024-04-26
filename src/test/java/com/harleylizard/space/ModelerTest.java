@@ -26,7 +26,7 @@ public final class ModelerTest {
     @Test
     public void map() throws IOException {
         var nbtPath = Paths.get(".cache", "background.nbt");
-        var binaryPath = Paths.get(".cache", "modeler_background.block");
+        var binaryPath = Paths.get(".cache", "debug.block");
 
         try (var inputStream = Files.newInputStream(nbtPath); var dataOutput = new DataOutputStream(Files.newOutputStream(binaryPath))) {
             var compoundTag = (CompoundTag) new NBTDeserializer().fromStream(inputStream).getTag();
@@ -72,19 +72,19 @@ public final class ModelerTest {
 
     private static Map<String, String> createMap() {
         var map = new HashMap<String, String>();
-        map.put("minecraft:mycelium", REGISTRY.get(Blocks.MODELER_GRASS));
-        map.put("minecraft:dirt", REGISTRY.get(Blocks.MODELER_DIRT));
-        map.put("minecraft:coarse_dirt", REGISTRY.get(Blocks.MODELER_DIRT));
-        map.put("minecraft:glowstone", REGISTRY.get(Blocks.MODELER_GLOW));
-        map.put("minecraft:warped_stem", REGISTRY.get(Blocks.MODELER_STEM));
-        map.put("minecraft:purple_concrete", REGISTRY.get(Blocks.MODELER_CAP));
-        map.put("minecraft:air", REGISTRY.get(Blocks.MODELER_AIR));
-        map.put("minecraft:short_grass", REGISTRY.get(Blocks.MODELER_WILD_GRASS));
-        map.put("minecraft:crimson_fungus", REGISTRY.get(Blocks.MODELER_MUSHROOM));
-        map.put("minecraft:smooth_stone_slab", REGISTRY.get(Blocks.MODELER_FLOOR));
-        map.put("minecraft:weeping_vines", REGISTRY.get(Blocks.MODELER_AIR));
-        map.put("minecraft:weeping_vines_plant", REGISTRY.get(Blocks.MODELER_AIR));
-        map.put("minecraft:sea_lantern", REGISTRY.get(Blocks.MODELER_LIGHT));
+        map.put("minecraft:mycelium", REGISTRY.get(Blocks.GRASS));
+        map.put("minecraft:dirt", REGISTRY.get(Blocks.DIRT));
+        map.put("minecraft:coarse_dirt", REGISTRY.get(Blocks.DIRT));
+        map.put("minecraft:glowstone", REGISTRY.get(Blocks.GLOW));
+        map.put("minecraft:warped_stem", REGISTRY.get(Blocks.STEM));
+        map.put("minecraft:purple_concrete", REGISTRY.get(Blocks.CAP));
+        map.put("minecraft:air", REGISTRY.get(Blocks.AIR));
+        map.put("minecraft:short_grass", REGISTRY.get(Blocks.WILD_GRASS));
+        map.put("minecraft:crimson_fungus", REGISTRY.get(Blocks.MUSHROOM));
+        map.put("minecraft:smooth_stone_slab", REGISTRY.get(Blocks.SLAB));
+        map.put("minecraft:weeping_vines", REGISTRY.get(Blocks.AIR));
+        map.put("minecraft:weeping_vines_plant", REGISTRY.get(Blocks.AIR));
+        map.put("minecraft:sea_lantern", REGISTRY.get(Blocks.WHITE_LIGHT));
 
         return Collections.unmodifiableMap(map);
     }

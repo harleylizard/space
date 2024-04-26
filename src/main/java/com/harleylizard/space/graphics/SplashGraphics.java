@@ -34,10 +34,10 @@ public final class SplashGraphics {
         var width = 1.0F;
         var height = 1.0F;
         float[] vertices = {
-                -width, -height, 0.0F, 1.0F, 0.0F, 1.0F,
-                 width, -height, 0.0F, 1.0F, 1.0F, 1.0F,
-                 width,  height, 0.0F, 1.0F, 1.0F, 0.0F,
-                -width,  height, 0.0F, 1.0F, 0.0F, 0.0F
+                -width, -height, 0.1F, 1.0F, 0.0F, 1.0F,
+                 width, -height, 0.1F, 1.0F, 1.0F, 1.0F,
+                 width,  height, 0.1F, 1.0F, 1.0F, 0.0F,
+                -width,  height, 0.1F, 1.0F, 0.0F, 0.0F
         };
         int[] elements = {
                 0, 1, 2,
@@ -91,7 +91,8 @@ public final class SplashGraphics {
         String[] paths = {
                 "textures/splash/splash_0.png",
                 "textures/splash/splash_1.png",
-                "textures/splash/splash_2.png"
+                "textures/splash/splash_2.png",
+                "textures/splash/splash_3.png"
         };
         return paths[ThreadLocalRandom.current().nextInt(paths.length)];
     }

@@ -2,7 +2,7 @@
   "ambient": true,
   "layer": "transparent",
   "textures": {
-    "wild_grass": "textures/modeler_wild_grass.png"
+    "wild_grass": "textures/block/wild_grass.png"
   },
   "shapes": [
     {

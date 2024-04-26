@@ -1,6 +1,6 @@
 {
   "textures": {
-    "dirt": "textures/modeler_dirt.png"
+    "dirt": "textures/block/dirt.png"
   },
   "shapes": [
     {

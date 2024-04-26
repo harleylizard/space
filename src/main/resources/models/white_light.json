@@ -2,8 +2,8 @@
   "light": [1.0, 1.0, 1.0, 0.5],
   "textures": {
     "light": {
-      "color": "textures/modeler_light.png",
-      "emissive": "textures/modeler_light_emissive.png"
+      "color": "textures/block/white_light.png",
+      "emissive": "textures/block/white_light_emissive.png"
     }
   },
   "shapes": [

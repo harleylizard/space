@@ -40,7 +40,7 @@ public final class Window {
             glViewport(0, 0, width, height);
         });
 
-
+        glfwSwapInterval(1);
 
         glfwMakeContextCurrent(window);
         GL.createCapabilities();

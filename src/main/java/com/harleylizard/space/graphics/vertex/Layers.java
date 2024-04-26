@@ -1,14 +1,15 @@
 package com.harleylizard.space.graphics.vertex;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL45.*;
 
 public final class Layers {
-    private final Map<Layer, VertexBuffer> map = new EnumMap<>(Layer.class);
-    private final Map<Layer, VertexParameters> parameters = new EnumMap<>(Layer.class);
+    private final Map<Layer, VertexBuffer> map = new HashMap<>();
+    private final Map<Layer, VertexParameters> parameters = new HashMap<>();
 
     public void upload() {
         for (var entry : parameters.entrySet()) {
@@ -62,12 +63,12 @@ public final class Layers {
             glNamedBufferData(vbo, parameters.getVerticesInBytes(), usage);
             glNamedBufferData(ebo, parameters.getElementsInBytes(), usage);
 
-            var mapped = glMapNamedBuffer(vbo, GL_WRITE_ONLY);
+            var mapped = glMapNamedBuffer(vbo, GL_READ_WRITE);
             if (mapped != null) {
                 mapped.put(parameters.getVertices());
             }
             glUnmapNamedBuffer(vbo);
-            mapped = glMapNamedBuffer(ebo, GL_WRITE_ONLY);
+            mapped = glMapNamedBuffer(ebo, GL_READ_WRITE);
             if (mapped != null) {
                 mapped.put(parameters.getElements());
             }

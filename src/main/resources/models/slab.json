@@ -1,6 +1,6 @@
 {
   "textures": {
-    "floor": "textures/brick.png"
+    "floor": "textures/block/brick.png"
   },
   "shapes": [
     {

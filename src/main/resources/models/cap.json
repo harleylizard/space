@@ -1,8 +1,13 @@
 {
   "textures": {
-    "bottom": "textures/dirt.png",
-    "top": "textures/modeler_grass_top.png",
-    "side": "textures/modeler_grass_side.png"
+    "side": {
+      "color": "textures/block/cap.png",
+      "emissive": "textures/block/cap_emissive.png"
+    },
+    "bottom": {
+      "color": "textures/block/cap_bottom.png",
+      "emissive": "textures/block/cap_bottom_emissive.png"
+    }
   },
   "shapes": [
     {
@@ -14,7 +19,7 @@
         "east": { "uv": [0, 0, 16, 16], "texture": "side" },
         "south": { "uv": [0, 0, 16, 16], "texture": "side" },
         "west": { "uv": [0, 0, 16, 16], "texture": "side" },
-        "up": { "uv": [0, 0, 16, 16], "texture": "top" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "side" },
         "down": { "uv": [0, 0, 16, 16], "texture": "bottom" }
       }
     }

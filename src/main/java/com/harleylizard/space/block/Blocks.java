@@ -4,28 +4,28 @@ import com.harleylizard.space.math.BoundingBox;
 import com.harleylizard.space.registry.Registry;
 
 public final class Blocks {
-    public static final Block MODELER_AIR = new Block(null);
-    public static final Block MODELER_STEM = new Block(Block.createBlock());
-    public static final Block MODELER_CAP = new Block(Block.createBlock());
-    public static final Block MODELER_DIRT = new Block(Block.createBlock());
-    public static final Block MODELER_GRASS = new Block(Block.createBlock());
-    public static final Block MODELER_WILD_GRASS = new Block(null);
-    public static final Block MODELER_MUSHROOM = new Block(null);
-    public static final Block MODELER_GLOW = new Block(null);
-    public static final Block MODELER_FLOOR = new Block(new BoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F));
-    public static final Block MODELER_LIGHT = new Block(Block.createBlock());
+    public static final Block AIR = new Block(new Properties.Builder().canCollide(false).build());
+    public static final Block STEM = new Block(Properties.createDefault());
+    public static final Block CAP = new Block(Properties.createDefault());
+    public static final Block DIRT = new Block(Properties.createDefault());
+    public static final Block GRASS = new Block(Properties.createDefault());
+    public static final Block WILD_GRASS = new Block(Properties.copy(AIR));
+    public static final Block MUSHROOM = new Block(Properties.copy(AIR));
+    public static final Block GLOW = new Block(Properties.copy(AIR));
+    public static final Block SLAB = new Block(new Properties.Builder().setBoundingBox(new BoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F)).build());
+    public static final Block WHITE_LIGHT = new Block(Properties.createDefault());
 
     public static final Registry<Block> REGISTRY = new Registry.Builder<Block>()
-            .register("modeler_air", MODELER_AIR)
-            .register("modeler_stem", MODELER_STEM)
-            .register("modeler_cap", MODELER_CAP)
-            .register("modeler_dirt", MODELER_DIRT)
-            .register("modeler_grass", MODELER_GRASS)
-            .register("modeler_wild_grass", MODELER_WILD_GRASS)
-            .register("modeler_mushroom", MODELER_MUSHROOM)
-            .register("modeler_glow", MODELER_GLOW)
-            .register("modeler_floor", MODELER_FLOOR)
-            .register("modeler_light", MODELER_LIGHT)
+            .register("air", AIR)
+            .register("stem", STEM)
+            .register("cap", CAP)
+            .register("dirt", DIRT)
+            .register("grass", GRASS)
+            .register("wild_grass", WILD_GRASS)
+            .register("mushroom", MUSHROOM)
+            .register("glow", GLOW)
+            .register("slab", SLAB)
+            .register("white_light", WHITE_LIGHT)
             .build();
 
     private Blocks() {}

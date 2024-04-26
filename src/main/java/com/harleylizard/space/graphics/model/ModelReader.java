@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 public final class ModelReader {
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(Model.class, ModelDeserializer.JSON_DESERIALIZER).create();
 
@@ -20,6 +22,7 @@ public final class ModelReader {
     private ModelReader() {}
 
     public static Model getModel(Registry<Block> registry, Block block) throws IOException {
+        requireNonNull(block, "Block is null");
         var path = "models/%s.json".formatted(registry.get(block));
         if (MAP.containsKey(path)) {
             return MAP.get(path);

@@ -30,8 +30,8 @@ public final class MutableScene implements CullGetter {
         this.palette = palette;
         this.blocks = blocks;
 
-        palette.add(Blocks.MODELER_LIGHT);
-        blocks[indexOf(15, 4, 15)] = palette.indexOf(Blocks.MODELER_LIGHT);
+        palette.add(Blocks.WHITE_LIGHT);
+        blocks[indexOf(15, 4, 15)] = palette.indexOf(Blocks.WHITE_LIGHT);
     }
 
     public void draw(Layers layers, LightSdf sdf) {
@@ -52,7 +52,7 @@ public final class MutableScene implements CullGetter {
             var size = blocks.length;
             for (var i = 0; i < size; i++) {
                 var block = palette.get(blocks[i]);
-                if (block == Blocks.MODELER_AIR) {
+                if (block == Blocks.AIR) {
                     continue;
                 }
                 var model = ModelReader.getModel(Blocks.REGISTRY, block);
@@ -71,7 +71,7 @@ public final class MutableScene implements CullGetter {
 
             for (var i = 0; i < size; i++) {
                 var block = palette.get(blocks[i]);
-                if (block == Blocks.MODELER_AIR) {
+                if (block == Blocks.AIR) {
                     continue;
                 }
 
@@ -119,7 +119,7 @@ public final class MutableScene implements CullGetter {
             return false;
         }
         var block = palette.get(blocks[indexOf(x, y, z)]);
-        if (block == Blocks.MODELER_AIR) {
+        if (block == Blocks.AIR) {
             return false;
         }
         try {
@@ -145,7 +145,7 @@ public final class MutableScene implements CullGetter {
 
     public Block getBlock(int x, int y, int z) {
         if (x < 0 || y < 0 || z < 0 || x > 31 || y > 31 || z > 31) {
-            return Blocks.MODELER_AIR;
+            return Blocks.AIR;
         }
         return palette.get(blocks[indexOf(x, y, z)]);
     }

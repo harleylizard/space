@@ -4,8 +4,8 @@
   "layer": "transparent",
   "textures": {
     "glow": {
-      "color": "textures/modeler_glow.png",
-      "emissive": "textures/modeler_glow_emissive.png"
+      "color": "textures/block/glow.png",
+      "emissive": "textures/block/glow_emissive.png"
     }
   },
   "shapes": [

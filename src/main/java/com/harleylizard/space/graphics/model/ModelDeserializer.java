@@ -16,7 +16,7 @@ import com.harleylizard.space.math.Direction;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class ModelDeserializer {
@@ -130,7 +130,7 @@ public final class ModelDeserializer {
     }
 
     private static Map<Direction, Face> createFaces(TextureLookup lookup, JsonObject jsonObject) {
-        var map = new EnumMap<Direction, Face>(Direction.class);
+        var map = new HashMap<Direction, Face>();
 
         for (var direction : Direction.values()) {
             var name = direction.stringify();
@@ -152,7 +152,7 @@ public final class ModelDeserializer {
     }
 
     private static Map<Plane.Direction, Face> createPlaneFaces(TextureLookup lookup, JsonObject jsonObject) {
-        var map = new EnumMap<Plane.Direction, Face>(Plane.Direction.class);
+        var map = new HashMap<Plane.Direction, Face>();
 
         for (var direction : Plane.Direction.values()) {
             var name = direction.getName();

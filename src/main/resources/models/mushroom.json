@@ -2,12 +2,12 @@
   "ambient": true,
   "textures": {
     "0": {
-      "color": "textures/modeler_mushroom.png",
-      "emissive": "textures/modeler_mushroom_emissive.png"
+      "color": "textures/block/mushroom.png",
+      "emissive": "textures/block/mushroom_emissive.png"
     },
     "1": {
-      "color": "textures/modeler_mushroom_top.png",
-      "emissive": "textures/modeler_mushroom_top_emissive.png"
+      "color": "textures/block/mushroom_top.png",
+      "emissive": "textures/block/mushroom_top_emissive.png"
     }
   },
   "shapes": [

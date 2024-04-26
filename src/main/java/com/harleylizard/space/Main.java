@@ -7,7 +7,6 @@ import com.harleylizard.space.graphics.text.MutableText;
 import com.harleylizard.space.graphics.text.TextGraphics;
 import com.harleylizard.space.input.Keyboard;
 import com.harleylizard.space.input.Mouse;
-import com.harleylizard.space.modeler.Modeler;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -38,8 +37,7 @@ public final class Main {
             var view = new Matrix4f();
             var model = new Matrix4f();
 
-            var modeler = new Modeler();
-            var modelerGraphics = new DebugGraphics();
+            var debugGraphics = new DebugGraphics();
 
             var texts = new ArrayList<MutableText>();
             var textGraphics = new TextGraphics();
@@ -49,6 +47,10 @@ public final class Main {
             var copyright = new MutableText(english, -25, -26);
             copyright.set("Copyright 2024. Harley Oswald, All Rights Reserved.");
 
+            var version = new MutableText(english, -46, 24);
+            version.set("version 1.0 alpha");
+
+            texts.add(version);
             texts.add(fps);
             texts.add(copyright);
 
@@ -92,8 +94,11 @@ public final class Main {
                 while (delta >= 1.0D) {
                     splashGraphics.step();
                     if (splashGraphics.isReady()) {
-                        player.step(keyboard, mouse, (float) (delta / (float) targetFps));
+                        var time = (float) delta / (float) targetFps;
+                        player.step(keyboard, mouse, time);
+                        debugGraphics.step(time);
                     }
+
                     delta--;
                 }
 
@@ -106,7 +111,7 @@ public final class Main {
                     projection.identity();
                     projection.perspective(fovy, aspectRatio,  0.01F, 100.0F);
 
-                    modelerGraphics.draw(window, player, modeler, projection, view, model);
+                    debugGraphics.draw(window, player, projection, view, model);
                 }
 
                 // GUI
@@ -133,6 +138,7 @@ public final class Main {
                     fps.set("FPS %d".formatted(frames));
                     frames = 0;
                 }
+
             }
         } finally {
             window.destroy();
