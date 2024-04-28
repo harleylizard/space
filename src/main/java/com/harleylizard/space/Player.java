@@ -54,21 +54,38 @@ public final class Player {
         var sin = Math.sin(yaw);
         var cos = Math.cos(yaw);
 
+        var x = false;
+        var y = false;
+
         if (keyboard.isPressed(GLFW_KEY_W)) {
-            velocity.z -= speed * cos;
-            velocity.x += speed * sin;
+            x = true;
         }
         if (keyboard.isPressed(GLFW_KEY_A)) {
-            velocity.x -= speed * cos;
-            velocity.z -= speed * sin;
-        }
-        if (keyboard.isPressed(GLFW_KEY_S)) {
-            velocity.z += speed * cos;
-            velocity.x -= speed * sin;
+            y = true;
         }
         if (keyboard.isPressed(GLFW_KEY_D)) {
-            velocity.x += speed * cos;
-            velocity.z += speed * sin;
+            y = true;
+        }
+        if (keyboard.isPressed(GLFW_KEY_S)) {
+            x = true;
+        }
+        var shrunk = x && y ? speed * 0.75F : speed;
+
+        if (keyboard.isPressed(GLFW_KEY_W)) {
+            velocity.z -= shrunk * cos;
+            velocity.x += shrunk * sin;
+        }
+        if (keyboard.isPressed(GLFW_KEY_A)) {
+            velocity.x -= shrunk * cos;
+            velocity.z -= shrunk * sin;
+        }
+        if (keyboard.isPressed(GLFW_KEY_S)) {
+            velocity.z += shrunk * cos;
+            velocity.x -= shrunk * sin;
+        }
+        if (keyboard.isPressed(GLFW_KEY_D)) {
+            velocity.x += shrunk * cos;
+            velocity.z += shrunk * sin;
         }
         if (keyboard.isPressed(GLFW_KEY_SPACE)) {
             velocity.y += speed;
@@ -115,10 +132,10 @@ public final class Player {
                     velocity.x = 0.0F;
                 }
                 if (boundingBoxY.intersects(moved)) {
-                    velocity.y = 0.0F;
+                    velocity.y = -velocity.y * 0.01F;
                 }
                 if (boundingBoxZ.intersects(moved)) {
-                    velocity.z = 0.0F;
+                    velocity.z = -velocity.z * 0.01F;
                 }
             }
         }

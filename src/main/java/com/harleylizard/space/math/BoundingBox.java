@@ -1,5 +1,8 @@
 package com.harleylizard.space.math;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
 public final class BoundingBox {
     private final float minX;
     private final float minY;
@@ -19,6 +22,13 @@ public final class BoundingBox {
 
     public BoundingBox move(float x, float y, float z) {
         return new BoundingBox(minX + x, minY + y, minZ + z, maxX + x, maxY + y, maxZ + z);
+    }
+
+    public BoundingBox transform(Matrix4f matrix4f) {
+        var min = new Vector3f();
+        var max = new Vector3f();
+        matrix4f.transformAab(minX, minY, minZ, maxX, maxY, maxZ, min, max);
+        return new BoundingBox(min.x, min.y, min.z, max.x, max.y, max.z);
     }
 
     public boolean intersects(BoundingBox boundingBox) {

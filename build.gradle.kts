@@ -12,6 +12,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven("https://jitpack.io/")
 }
 
@@ -25,6 +26,8 @@ dependencies {
     implementation("com.google.guava:guava:33.1.0-jre")
 
     implementation("com.guardsquare:proguard-gradle:7.3.2")
+
+    implementation("com.harleylizard:simplexnoise:1.0-SNAPSHOT")
 
     testImplementation("com.github.Querz:NBT:6.1")
 

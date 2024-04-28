@@ -16,7 +16,6 @@ public final class SplashGraphics {
     private final int vao = glCreateVertexArrays();
 
     private boolean ready;
-    private int steps;
     private int time;
 
     {
@@ -53,8 +52,7 @@ public final class SplashGraphics {
         glBindTextureUnit(2, texture);
     }
 
-    public void step() {
-        steps++;
+    public void step(int steps) {
         if (steps % 20 == 0) {
             time++;
         }

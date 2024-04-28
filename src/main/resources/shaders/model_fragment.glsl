@@ -73,7 +73,6 @@ vec4 ditherColor(vec4 color) {
     return vec4(ditheredColor, 1.0);
 }
 
-
 // Tangent, Bitangent, Normal matrix.
 mat3 getTBN() {
     vec3 edge0 = dFdx(m_position.xyz);

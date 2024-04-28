@@ -13,7 +13,7 @@ struct Type {
     vec4 uv;
 };
 
-layout (binding = 0, column_major) buffer bufferStorage {
+layout (binding = 1, column_major) buffer bufferStorage {
     Type types[];
 };
 

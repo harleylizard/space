@@ -25,7 +25,6 @@ public final class Quad {
                 0, 1, 2,
                 2, 3, 0
         };
-
         var flags = 0;
         glNamedBufferStorage(vbo, vertices, flags);
         glNamedBufferStorage(ebo, elements, flags);

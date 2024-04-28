@@ -8,25 +8,32 @@ import com.harleylizard.space.graphics.text.TextGraphics;
 import com.harleylizard.space.input.Keyboard;
 import com.harleylizard.space.input.Mouse;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GLUtil;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL46C.*;
 
 public final class Main {
 
     private Main() {}
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (!glfwInit()) {
             throw new RuntimeException("Failed to initialise GLFW");
         }
 
         var window = new Window();
 
-        try {
+        var path = Paths.get(".cache", "gl.log");
+
+        try (var printStream = new PrintStream(Files.newOutputStream(path))) {
             var quad = new Quad();
             var pipeline = new ProgramPipeline.Builder()
                     .useProgram(Shader.FRAGMENT, "shaders/quad_fragment.glsl")
@@ -46,6 +53,7 @@ public final class Main {
             var fps = new MutableText(english, -46, 26);
             var copyright = new MutableText(english, -25, -26);
             copyright.set("Copyright 2024. Harley Oswald, All Rights Reserved.");
+            Validator.assertValid(copyright.stringify());
 
             var version = new MutableText(english, -46, 24);
             version.set("version 1.0 alpha");
@@ -83,6 +91,11 @@ public final class Main {
             var fpsTimer = System.currentTimeMillis();
             var frames = 0;
 
+            var steps = 0;
+
+            GLUtil.setupDebugMessageCallback(printStream);
+            glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DONT_CARE, 0x20071, false);
+
             while (!window.shouldClose()) {
                 var currentTime = System.nanoTime();
                 var elapsedTime = currentTime - previousTime;
@@ -92,11 +105,13 @@ public final class Main {
                 delta += elapsedTime / (double) targetTime;
 
                 while (delta >= 1.0D) {
-                    splashGraphics.step();
+                    var time = (float) delta / (float) targetFps;
+                    steps++;
+
+                    splashGraphics.step(steps);
                     if (splashGraphics.isReady()) {
-                        var time = (float) delta / (float) targetFps;
                         player.step(keyboard, mouse, time);
-                        debugGraphics.step(time);
+                        debugGraphics.step(steps, time);
                     }
 
                     delta--;
@@ -124,6 +139,8 @@ public final class Main {
                 view.identity();
                 model.identity();
 
+                Validator.assertValid(copyright.stringify());
+
                 UniformBuffer.uploadMatrices(projection, view, model);
 
                 splashGraphics.draw();
@@ -138,8 +155,8 @@ public final class Main {
                     fps.set("FPS %d".formatted(frames));
                     frames = 0;
                 }
-
             }
+            printStream.flush();
         } finally {
             window.destroy();
             glfwTerminate();

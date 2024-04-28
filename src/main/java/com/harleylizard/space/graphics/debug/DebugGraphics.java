@@ -5,9 +5,12 @@ import com.harleylizard.space.Window;
 import com.harleylizard.space.graphics.ProgramPipeline;
 import com.harleylizard.space.graphics.Shader;
 import com.harleylizard.space.graphics.UniformBuffer;
+import com.harleylizard.space.graphics.star.SolarSystemGraphics;
 import com.harleylizard.space.graphics.vertex.Layers;
 import com.harleylizard.space.light.LightSdf;
 import org.joml.Matrix4f;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
@@ -36,16 +39,18 @@ public final class DebugGraphics {
     private final Layers layers = new Layers();
     private final MutableScene scene = MutableScene.SCENE = MutableScene.of("debug.block");
 
-    private float steps;
-    private float time;
+    private final long seed = ThreadLocalRandom.current().nextInt();
+    private final SolarSystemGraphics solarSystemGraphics = new SolarSystemGraphics();
 
-    public void step(float time) {
-        steps += 1.25F * time;
+    private float animation;
+
+    public void step(int steps, float time) {
+        animation += time;
     }
 
     public void draw(Window window, Player player, Matrix4f projection, Matrix4f view, Matrix4f model) {
         glProgramUniform1f(fragment, aspectRatioLocation, window.getAspectRatio());
-        glProgramUniform1f(vertex, timeLocation, steps);
+        glProgramUniform1f(vertex, timeLocation, animation);
 
         scene.draw(layers, sdf);
         uploadLights();
@@ -59,6 +64,8 @@ public final class DebugGraphics {
         model.identity();
 
         UniformBuffer.uploadMatrices(projection, view, model);
+
+        solarSystemGraphics.draw(animation, seed);
 
         pipeline.bind();
         layers.draw();

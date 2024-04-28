@@ -22,6 +22,8 @@ public final class TextGraphics {
     private final int location = glGetUniformLocation(fragment, "sampler");
     private final int ssbo = pipeline.getBuffer("bufferStorage");
 
+    private final Matrix4f matrix4f = new Matrix4f();
+
     private final int vao = glCreateVertexArrays();
 
     {
@@ -46,7 +48,6 @@ public final class TextGraphics {
                 0, 1, 2,
                 2, 3, 0
         };
-
         var flags = 0;
         glNamedBufferStorage(vbo, vertices, flags);
         glNamedBufferStorage(ebo, elements, flags);
@@ -60,14 +61,10 @@ public final class TextGraphics {
         pipeline.bind();
 
         glBindVertexArray(vao);
-
         glEnableVertexArrayAttrib(vao, 0);
-
         var size = getCharSize(list);
         glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, size);
-
         glDisableVertexArrayAttrib(vao, 0);
-
         glBindVertexArray(0);
 
         ProgramPipeline.unbind();
@@ -75,8 +72,6 @@ public final class TextGraphics {
 
     private void upload(List<MutableText> list) {
         var buffer = memCalloc(((16 + 4) * 4) * getCharSize(list));
-
-        var matrix4f = new Matrix4f();
 
         var j = 0;
         for (var text : list) {

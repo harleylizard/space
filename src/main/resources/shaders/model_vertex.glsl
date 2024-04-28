@@ -23,7 +23,7 @@ out vec4 m_lightMap;
 uniform float time;
 
 void main() {
-    float offsetPosition = mod(position.xz.r, 24.0F);
+    float offsetPosition = mod(position.xyz.r, 4.0F);
 
     float offset = time + offsetPosition;
     float wobble = (sin(offset) - sin(offset / 2.0F) - cos((offset / 4.0F) * 5.0F)) * 0.01F;
